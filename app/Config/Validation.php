@@ -47,6 +47,12 @@ class Validation
 		'type' => 'required|min_length[3]|max_length[255]',
 		'otbID' => 'required|min_length[3]|max_length[255]'
 	];
+	public $activitysInsert=[
+		'longitude'=>'required|min_length[1]|max_length[255]',
+		'latitude'=>'required|min_length[1]|max_length[255]',
+		'alertID'=>'required|min_length[1]|max_length[255]',
+		'userID'=>'required|min_length[1]|max_length[255]'
+	];
 	
 	//--------------------------------------------------------------------
 	
