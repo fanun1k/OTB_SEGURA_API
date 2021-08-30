@@ -1,12 +1,12 @@
 <?php namespace App\Controllers;
 
-use App\Models\AlertTypeModel;
+use App\Models\OtbsModel;
 use CodeIgniter\RESTful\ResourceController;
 
-class RestAlertType extends ResourceController
+class RestOtbs extends ResourceController
 {
-    protected $modelName = 'App\Models\AlertTypeModel';
-    protected $format    = 'json';
+    protected $modelName = 'App\Models\OtbsModel';
+    protected $format  = 'json';
     
     public function index()
     {
@@ -17,26 +17,26 @@ class RestAlertType extends ResourceController
     {
         if ($id == null) 
         {
-            return $this->genericResponse(null,"El ID no fue encontrado",500); 
+            return $this->genericResponse(null,"El ID de la otb no fue encontrado",500); 
         }
 
-        $alertType=$this->model->find($id);
+        $otb=$this->model->find($id); 
 
-        if (!$alertType) 
+        if (!$otb) 
         {
-            return $this->genericResponse(null,"la alerta no existe",500); 
+            return $this->genericResponse(null,"la otb no esta registrada",500); 
         }
 
-        return $this->genericResponse($alertType,"",200); 
+        return $this->genericResponse($otb,"",200); 
     }
 
     public function create(){ 
 
-        $alertTypeModel =new AlertTypeModel(); 
+        $otbModel =new OtbsModel(); 
 
-        if($this->validate('alerts')){ 
-            $id=$alertTypeModel->insert([
-                'nombre_tipo_alerta'=>$this->request->getPost('name')
+        if($this->validate('otbsInsert')){
+            $id=$otbModel->insert([
+                'nombre'=>$this->request->getPost('name')
             ]);
             return $this-> genericResponse($this->model->find($id),null,200);
         }
@@ -45,21 +45,21 @@ class RestAlertType extends ResourceController
         return $this->genericResponse(null,$validation->getErrors(),500); 
         
     }
-    
+    /*
     public function update($id=null){
 
-        $alertTypeModel=new AlertTypeModel();
+        $otbModel=new OtbsModel();
         $data=$this->request->getRawInput();
-        $alertType=$this->model->find($id);
+        $otb=$this->model->find($id);
 
-        if (!$alertType)
+        if (!$otb)
         {
-            return $this->genericResponse(null,"la alerta no existe",500);
+            return $this->genericResponse(null,"la otb no existe",500);
         }
-        if($this->validate('alerts')){
+        if($this->validate('otbs')){
             
-            $alertTypeModel->update($id,[
-                'nombre_tipo_alerta'=>$data['name']            
+            $otbModel->update($id,[
+                'nombre'=>$data['name']            
             ]);
 
             return $this-> genericResponse($this->model->find($id),null,200);
@@ -68,18 +68,18 @@ class RestAlertType extends ResourceController
         $validation= \Config\Services::validation();
         return $this->genericResponse(null,$validation->getErrors(),500); 
      
-    }
+    }*/
 
     public function delete($id=null){ 
 
-        $alertType=$this->model->find($id); 
+        $otb=$this->model->find($id); 
 
-        if (!$alertType) 
+        if (!$otb) 
         {
-            return $this->genericResponse(null,"la alerta no existe",500);
+            return $this->genericResponse(null,"la otb no existe",500); 
         }
         $this->model->delete($id);
-        return $this-> genericResponse('El tipo de alerta fue eliminada',null,200); 
+        return $this-> genericResponse('La otb fue eliminada eliminada',null,200); 
     }
         
     private function genericResponse($data,$msj,$code)

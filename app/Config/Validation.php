@@ -39,6 +39,7 @@ class Validation
 	public $alerts=[
 		'name'=>'required|min_length[3]|max_length[255]'
 	];
+
 	public $usersInsert=[
 		'name'=>'required|min_length[3]|max_length[255]',
 		'password'=>'required|min_length[6]|max_length[255]',
@@ -46,6 +47,10 @@ class Validation
 		'ci' => 'required|min_length[3]|max_length[255]',
 		'type' => 'required|min_length[3]|max_length[255]',
 		'otbID' => 'required|min_length[3]|max_length[255]'
+	];
+
+	public $otbsInsert=[
+		'name'=>'required|min_length[5]|max_length[225]' 
 	];
 	public $activitysInsert=[
 		'longitude'=>'required|min_length[1]|max_length[255]',
