@@ -36,6 +36,10 @@ $routes->get('/', 'Home::index');
 
 $routes->resource('restAlertType',['controller'=>'RestAlertType']);
 $routes->resource('restAlert',['controller'=>'RestAlerts']);
+$routes->resource('restUser',['controller'=>'RestUsers']);
+$routes->resource('resOtb',['controller'=>'RestOtbs']);
+
+
 /*
  * --------------------------------------------------------------------
  * Additional Routing
