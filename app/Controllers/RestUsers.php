@@ -41,7 +41,8 @@ class RestUsers extends ResourceController
                 'celular'=>$this->request->getPost('phone'),
                 'carnet'=>$this->request->getPost('ci'),
                 'tipo'=>$this->request->getPost('type'),
-                'otb_ID'=>$this->request->getPost('otbID')
+                'otb_ID'=>$this->request->getPost('otbID'),
+                'nombre_usuario'=>$this->request->getPost('username')
             ]);
             return $this-> genericResponse($this->model->find($id),null,200);
         }

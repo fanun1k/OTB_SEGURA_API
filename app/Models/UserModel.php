@@ -9,7 +9,7 @@ class UserModel extends Model
     //El nombre del ID en la tabla
     protected $primaryKey= 'usuario_ID';
     //Last columnas que van a afectar
-    protected $allowedFields= ['nombre_completo','nombre_usuario', 'contraseña', 'celular','carnet','estado', 'tipo'];
+    protected $allowedFields= ['nombre_completo','nombre_usuario', 'contraseña', 'celular','carnet','estado', 'tipo', 'otb_ID'];
     
     public function get($id = null)//el metodo lo dejo
     {
