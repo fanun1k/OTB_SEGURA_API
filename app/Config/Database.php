@@ -33,8 +33,8 @@ class Database extends Config
 	public $default = [
 		'DSN'      => '',
 		'hostname' => 'localhost',
-		'username' => 'sa',
-		'password' => 'pablodaniel56325',
+		'username' => 'sa',//cambie esto
+		'password' => 'sa2021',// cambie esto
 		'database' => 'OTB_SEGURA_DB',
 		'DBDriver' => 'MySQLi',
 		'DBPrefix' => '',
