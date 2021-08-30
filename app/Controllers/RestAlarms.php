@@ -1,12 +1,11 @@
 <?php namespace App\Controllers;
 
-use App\Models\AlertsModel;
-use App\Models\AlertTypeModel;
+use App\Models\AlarmsModel;
 use CodeIgniter\RESTful\ResourceController;
 
-class RestAlerts extends ResourceController
+class RestAlarms extends ResourceController
 {
-    protected $modelName = 'App\Models\AlertsModel';
+    protected $modelName = 'App\Models\AlarmsModel';
     protected $format    = 'json';
     
     public function index()
@@ -21,26 +20,24 @@ class RestAlerts extends ResourceController
             return $this->genericResponse(null,"El ID no fue encontrado",500);
         }
 
-        $alert=$this->model->find($id);
+        $alarm=$this->model->find($id);
 
-        if (!$alert)
+        if (!$alarm)
         {
-            return $this->genericResponse(null,"la alerta no existe",500);
+            return $this->genericResponse(null,"La alarma no existe",500);
         }
 
-        return $this->genericResponse($alert,"",200);
+        return $this->genericResponse($alarm,"",200);
     }
 
     public function create(){
 
-        $alertModel=new AlertsModel();
-
-        if($this->validate('activitysInsert')){
-            $id=$alertModel->insert([
-                'longitude'=>$this->request->getPost('longitude'),
-                'latitude'=>$this->request->getPost('latitude'),
-                'alert_type_ID'=>$this->request->getPost('alertID'),
-                'user_ID'=>$this->request->getPost('userID')
+        $alarmModel=new AlarmsModel();
+        
+        if($this->validate('alarmsInsert')){
+            $id=$alarmModel->insert([
+                'name'=>$this->request->getPost('name'),
+                'otb_ID'=>$this->request->getPost('otbID')
             ]);
             return $this-> genericResponse($this->model->find($id),null,200);
         }
@@ -49,23 +46,21 @@ class RestAlerts extends ResourceController
         return $this->genericResponse(null,$validation->getErrors(),500); 
         
     }
-    //public function update($id=null){
+    /*
+    public function update($id=null){
 
-        //$alertModel=new AlertsModel();
-        //$tipoAlertaModel=new AlertTypeModel();
-        //$usuarioModel=new UserModel();
-        //$data=$this->request->getRawInput();
+        $userModel=new UserModel();
+        //$otbModel = new OtbModel();
+        $data=$this->request->getRawInput();
+        $user=$this->model->find($id);
+        //$otbModelID = $this->model->find($data['otbID']);
 
-        //$tipoAlertaModelID=$this->model->find($data['alertID']);
-        //$alert=$this->model->find($id);
-        //$usuarioModelID=$this->model->find($data['userID']);
-
-        //if (!$alert)
-        //{          
-           // return $this->genericResponse(null,"la alerta no existe",500);
-        //}
-        //if($this->validate('alerts')){
-        /*    
+        if (!$user)
+        {
+            return $this->genericResponse(null,"el usuario no existe",500);
+        }
+        if($this->validate('alerts')){
+            
             $alertTypeModel->update($id,[
                 'nombre_tipo_alerta'=>$data['name']            
             ]);
@@ -80,14 +75,14 @@ class RestAlerts extends ResourceController
 
     public function delete($id=null){
 
-        $alert=$this->model->find($id);
+        $alarm=$this->model->find($id);
 
-        if (!$alert)
+        if (!$alarm)
         {
-            return $this->genericResponse(null,"la alerta no existe",500);
+            return $this->genericResponse(null,"La alarma no existe",500);
         }
         $this->model->delete($id);
-        return $this-> genericResponse('La alerta fue eliminada',null,200);    
+        return $this-> genericResponse('La alarma fue eliminado',null,200);    
     }
         
     private function genericResponse($data,$msj,$code)
