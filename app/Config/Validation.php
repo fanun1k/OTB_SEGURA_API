@@ -64,6 +64,11 @@ class Validation
 		'alertID'=>'required|min_length[1]|max_length[255]',
 		'userID'=>'required|min_length[1]|max_length[255]'
 	];
+
+	public $alarmsInsert=[
+		'name'=>'required|min_length[6]|max_length[255]',
+		'otbID'=> 'required|min_length[1]|max_length[255]'
+	];
 	
 	//--------------------------------------------------------------------
 	
