@@ -35,6 +35,8 @@ $routes->setAutoRoute(true);
 $routes->get('/', 'Home::index');
 
 $routes->resource('restAlertType',['controller'=>'RestAlertType']);
+$routes->resource('restUser',['controller'=>'RestUsers']);
+//Paso 1 Crear routa
 //1. Creamos nuestra ruta
 $routes->resource('resOtb',['controller'=>'RestOtbs']);
 
