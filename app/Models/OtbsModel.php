@@ -10,13 +10,13 @@ class OtbsModel extends Model
     //Nombre del id de la tabla
     protected $allowedFields= ['name','state']; // las columnas que vamos a afectar
 
-    public function get($id = null) //el metodo lo dejo
+    public function get($id = null) 
     {
         if($id===null){
             return $this->findAll();
         }
         return $this->asArray()
-            ->where(['otb_ID'=>$id]) //solo cambio esto - el nombre de la columna de la tabla
+            ->where(['otb_ID'=>$id]) 
             ->first();
     }
 }
