@@ -8,7 +8,7 @@ class OtbsModel extends Model
     protected $table='otb';
     protected $primaryKey= 'otb_ID';
     //Nombre del id de la tabla
-    protected $allowedFields= ['nombre','estado'];
+    protected $allowedFields= ['name','state']; // las columnas que vamos a afectar
 
     public function get($id = null) 
     {

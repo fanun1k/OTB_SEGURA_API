@@ -5,11 +5,11 @@ use CodeIgniter\Model;
 class UserModel extends Model
 {
     //Nombre de la tabla cambiar sobre la bdd
-    protected $table='usuario';
+    protected $table='user';
     //El nombre del ID en la tabla
-    protected $primaryKey= 'usuario_ID';
+    protected $primaryKey= 'user_ID';
     //Last columnas que van a afectar
-    protected $allowedFields= ['nombre_completo','nombre_usuario', 'contraseña', 'celular','carnet','estado', 'tipo', 'otb_ID'];
+    protected $allowedFields= ['name','email', 'password', 'cell_phone','ci','state', 'type','otb_ID'];
     
     public function get($id = null)//el metodo lo dejo
     {
@@ -17,7 +17,7 @@ class UserModel extends Model
             return $this->findAll();
         }
         return $this->asArray()
-            ->where(['usuario_ID'=>$id])// solo cambiar aqui el nombre de la columna de la tabla
+            ->where(['user_ID'=>$id])// solo cambiar aqui el nombre de la columna de la tabla
             ->first();
     }
 }
