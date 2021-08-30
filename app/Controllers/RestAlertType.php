@@ -5,40 +5,38 @@ use CodeIgniter\RESTful\ResourceController;
 
 class RestAlertType extends ResourceController
 {
-    protected $modelName = 'App\Models\AlertTypeModel';//Usamos le modelo aparte de esta vista AlertTypeModel
+    protected $modelName = 'App\Models\AlertTypeModel';
     protected $format    = 'json';
     
     public function index()
     {
-        return $this->genericResponse($this->model->findAll(),"",200); //rETORNA TODOS LOS REGISTROS DE TODOS LOS MODELOS
+        return $this->genericResponse($this->model->findAll(),"",200); 
     }
 
-    public function show($id = null) //Mostrar por id como: http://localhost:8080/OTB_SEGURA_API/restAlertType/1<- el numero xd
+    public function show($id = null) 
     {
-        if ($id == null) //Si el id es = a null retornara  un error 500 con el mensaje "el id no fue enecontrado"
+        if ($id == null) 
         {
-            return $this->genericResponse(null,"El ID no fue encontrado",500); //Error 500: error desde la parte del servidor
+            return $this->genericResponse(null,"El ID no fue encontrado",500); 
         }
 
-        $alertType=$this->model->find($id); //Supongo si es que id no se encuentra en la bdd
+        $alertType=$this->model->find($id);
 
-        if (!$alertType) //Si aletType es diferente de true
+        if (!$alertType) 
         {
-            return $this->genericResponse(null,"la alerta no existe",500); //Error 500: error desde la parte del servidor
+            return $this->genericResponse(null,"la alerta no existe",500); 
         }
 
-        return $this->genericResponse($alertType,"",200); //si todo sale bien retornaremos el alertType con 200: Todo ok
+        return $this->genericResponse($alertType,"",200); 
     }
 
-    //cambiar el create 
-    //cambiamos el validate 
-    public function create(){ //Crear
+    public function create(){ 
 
-        $alertTypeModel =new AlertTypeModel(); //Creamos la alerta con ayuda del modelo aparte
+        $alertTypeModel =new AlertTypeModel(); 
 
-        if($this->validate('alerts')){ //lo cambiamos segun 
+        if($this->validate('alerts')){ 
             $id=$alertTypeModel->insert([
-                'nombre_tipo_alerta'=>$this->request->getPost('name')//cambiamos el nombre de la tabla  1:19:00 del video
+                'nombre_tipo_alerta'=>$this->request->getPost('name')
             ]);
             return $this-> genericResponse($this->model->find($id),null,200);
         }
@@ -72,16 +70,16 @@ class RestAlertType extends ResourceController
      
     }
 
-    public function delete($id=null){ //Borrar
+    public function delete($id=null){ 
 
-        $alertType=$this->model->find($id); //buscamos el alerttype
+        $alertType=$this->model->find($id); 
 
-        if (!$alertType) // si es false(no se encuentra)
+        if (!$alertType) 
         {
-            return $this->genericResponse(null,"la alerta no existe",500); //con ayuda del genericResponse enviamos el mensage de "la alerta no existe" mas el error 500
+            return $this->genericResponse(null,"la alerta no existe",500);
         }
         $this->model->delete($id);
-        return $this-> genericResponse('El tipo de alerta fue eliminada',null,200); //Si se elimino de manera correcta enviamos el dato de "que se elimino la alerta " mas el 200 de todo ok
+        return $this-> genericResponse('El tipo de alerta fue eliminada',null,200); 
     }
         
     private function genericResponse($data,$msj,$code)
