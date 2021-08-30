@@ -39,6 +39,10 @@ class Validation
 	public $alerts=[
 		'name'=>'required|min_length[3]|max_length[255]'
 	];
+
+	public $otbsInsert=[
+		'name'=>'required|min_length[5]|max_length[225]' 
+	];
 	
 	//--------------------------------------------------------------------
 	
