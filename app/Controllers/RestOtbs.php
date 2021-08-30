@@ -36,7 +36,7 @@ class RestOtbs extends ResourceController
 
         if($this->validate('otbsInsert')){
             $id=$otbModel->insert([
-                'nombre'=>$this->request->getPost('name')
+                'name'=>$this->request->getPost('name')
             ]);
             return $this-> genericResponse($this->model->find($id),null,200);
         }

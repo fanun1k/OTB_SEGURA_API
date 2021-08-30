@@ -36,11 +36,11 @@ class RestUsers extends ResourceController
         
         if($this->validate('usersInsert')){
             $id=$userModel->insert([
-                'nombre_completo'=>$this->request->getPost('name'),
-                'contraseña'=>$this->request->getPost('password'),
-                'celular'=>$this->request->getPost('phone'),
-                'carnet'=>$this->request->getPost('ci'),
-                'tipo'=>$this->request->getPost('type'),
+                'name'=>$this->request->getPost('name'),
+                'password'=>$this->request->getPost('password'),
+                'cell_phone'=>$this->request->getPost('phone'),
+                'ci'=>$this->request->getPost('ci'),
+                'type'=>$this->request->getPost('type'),
                 'otb_ID'=>$this->request->getPost('otbID')
             ]);
             return $this-> genericResponse($this->model->find($id),null,200);
@@ -86,7 +86,7 @@ class RestUsers extends ResourceController
             return $this->genericResponse(null,"el usuario no existe",500);
         }
         $this->model->delete($id);
-        return $this-> genericResponse('El usuario fue eliminada',null,200);    
+        return $this-> genericResponse('El usuario fue eliminado',null,200);    
     }
         
     private function genericResponse($data,$msj,$code)

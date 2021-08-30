@@ -37,10 +37,10 @@ class RestAlerts extends ResourceController
 
         if($this->validate('activitysInsert')){
             $id=$alertModel->insert([
-                'longitud'=>$this->request->getPost('longitude'),
-                'latitud'=>$this->request->getPost('latitude'),
-                'tipo_Alerta_ID'=>$this->request->getPost('alertID'),
-                'usuario_ID'=>$this->request->getPost('userID')
+                'longitude'=>$this->request->getPost('longitude'),
+                'latitude'=>$this->request->getPost('latitude'),
+                'alert_type_ID'=>$this->request->getPost('alertID'),
+                'user_ID'=>$this->request->getPost('userID')
             ]);
             return $this-> genericResponse($this->model->find($id),null,200);
         }

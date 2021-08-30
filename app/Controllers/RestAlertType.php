@@ -1,6 +1,7 @@
 <?php namespace App\Controllers;
 
 use App\Models\AlertTypeModel;
+use App\Models\OtbsModel;
 use CodeIgniter\RESTful\ResourceController;
 
 class RestAlertType extends ResourceController
@@ -33,10 +34,15 @@ class RestAlertType extends ResourceController
     public function create(){ 
 
         $alertTypeModel =new AlertTypeModel(); 
+        $obt_Model=new OtbsModel();
 
         if($this->validate('alerts')){ 
+            if(!$obt_Model->find($this->request->getPost('otb_ID'))){
+                return $this-> genericResponse(null,'el ID de otb no existe',500);
+            }
             $id=$alertTypeModel->insert([
-                'nombre_tipo_alerta'=>$this->request->getPost('name')
+                'name'=>$this->request->getPost('name'),
+                'otb_ID'=>$this->request->getPost('otb_ID'),
             ]);
             return $this-> genericResponse($this->model->find($id),null,200);
         }
@@ -56,10 +62,11 @@ class RestAlertType extends ResourceController
         {
             return $this->genericResponse(null,"la alerta no existe",500);
         }
-        if($this->validate('alerts')){
+        if($this->validate('alertsUpdate')){
             
             $alertTypeModel->update($id,[
-                'nombre_tipo_alerta'=>$data['name']            
+                'name'=>$data['name'],
+                'state'=>$data['state']           
             ]);
 
             return $this-> genericResponse($this->model->find($id),null,200);
