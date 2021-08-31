@@ -35,6 +35,7 @@ class RestAlerts extends ResourceController
 
         $alertModel=new AlertsModel();
 
+        
         if($this->validate('activitysInsert')){
             $id=$alertModel->insert([
                 'longitude'=>$this->request->getPost('longitude'),
@@ -50,21 +51,17 @@ class RestAlerts extends ResourceController
         
     }
     public function update($id=null){
-
-        $alertModel=new AlertsModel();
-        $alertTypeModel=new AlertTypeModel();
+       
         $data=$this->request->getRawInput();
-
-        $tipoAlertaModelID=$this->model->find($data['alertID']);
         $alert=$this->model->find($id);
-        $usuarioModelID=$this->model->find($data['userID']);
 
         if (!$alert)
         {          
             return $this->genericResponse(null,"la alerta no existe",500);
         }
+
         if($this->validate('alerts')){
-            $alertTypeModel->update($id,[
+            $this->model->update($id,[
                 'nombre_tipo_alerta'=>$data['name']            
             ]);
 

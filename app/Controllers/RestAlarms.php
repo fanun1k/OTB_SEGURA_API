@@ -31,11 +31,9 @@ class RestAlarms extends ResourceController
     }
 
     public function create(){
-
-        $alarmModel=new AlarmsModel();
-        
+ 
         if($this->validate('alarmsInsert')){
-            $id=$alarmModel->insert([
+            $id=$this->model->insert([
                 'name'=>$this->request->getPost('name'),
                 'otb_ID'=>$this->request->getPost('otbID')
             ]);
