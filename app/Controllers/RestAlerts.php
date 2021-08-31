@@ -35,6 +35,7 @@ class RestAlerts extends ResourceController
 
         $alertModel=new AlertsModel();
 
+        
         if($this->validate('activitysInsert')){
             $id=$alertModel->insert([
                 'longitude'=>$this->request->getPost('longitude'),
@@ -49,24 +50,18 @@ class RestAlerts extends ResourceController
         return $this->genericResponse(null,$validation->getErrors(),500); 
         
     }
-    //public function update($id=null){
+    public function update($id=null){
+       
+        $data=$this->request->getRawInput();
+        $alert=$this->model->find($id);
 
-        //$alertModel=new AlertsModel();
-        //$tipoAlertaModel=new AlertTypeModel();
-        //$usuarioModel=new UserModel();
-        //$data=$this->request->getRawInput();
+        if (!$alert)
+        {          
+            return $this->genericResponse(null,"la alerta no existe",500);
+        }
 
-        //$tipoAlertaModelID=$this->model->find($data['alertID']);
-        //$alert=$this->model->find($id);
-        //$usuarioModelID=$this->model->find($data['userID']);
-
-        //if (!$alert)
-        //{          
-           // return $this->genericResponse(null,"la alerta no existe",500);
-        //}
-        //if($this->validate('alerts')){
-        /*    
-            $alertTypeModel->update($id,[
+        if($this->validate('alerts')){
+            $this->model->update($id,[
                 'nombre_tipo_alerta'=>$data['name']            
             ]);
 
@@ -74,9 +69,8 @@ class RestAlerts extends ResourceController
         }
         
         $validation= \Config\Services::validation();
-        return $this->genericResponse(null,$validation->getErrors(),500); 
-     
-    }*/
+        return $this->genericResponse(null,$validation->getErrors(),500);      
+    }
 
     public function delete($id=null){
 

@@ -1,5 +1,6 @@
 <?php namespace App\Controllers;
 
+use App\Models\OtbsModel;
 use App\Models\UserModel;
 use CodeIgniter\RESTful\ResourceController;
 
@@ -32,23 +33,30 @@ class RestUsers extends ResourceController
 
     public function create(){
 
-        $userModel=new UserModel();
+        $otbModel=new OtbsModel();
+
+        $idOtb=$otbModel->find($this->request->getPost('otbID'));
+        
+        if(!$idOtb){
+            return $this-> genericResponse(null,'El ID no pertenece a una OTB existente',500);
+        }
         
         if($this->validate('usersInsert')){
-            $id=$userModel->insert([
+
+            $id=$this->model->insert([
                 'name'=>$this->request->getPost('name'),
                 'password'=>$this->request->getPost('password'),
                 'cell_phone'=>$this->request->getPost('phone'),
                 'ci'=>$this->request->getPost('ci'),
                 'type'=>$this->request->getPost('type'),
-                'otb_ID'=>$this->request->getPost('otbID')
+                'otb_ID'=>$this->request->getPost('otbID'),
+                'email'=>$this->request->getPost('email')
             ]);
             return $this-> genericResponse($this->model->find($id),null,200);
         }
 
         $validation= \Config\Services::validation();
-        return $this->genericResponse(null,$validation->getErrors(),500); 
-        
+        return $this->genericResponse(null,$validation->getErrors(),500);   
     }
     
     public function update($id=null){
@@ -56,7 +64,8 @@ class RestUsers extends ResourceController
         $data=$this->request->getRawInput();
         $user=$this->model->find($id);
 
-        if (!$user)
+        $user=$this->model->find($id);//buscamos el id que nos llego
+        if (!$user)//si el id no existe devolvera un error
         {
             return $this->genericResponse(null,"el usuario no existe",500);
         }
