@@ -59,18 +59,15 @@ class RestUsers extends ResourceController
         return $this->genericResponse(null,$validation->getErrors(),500);   
     }
     
-    /*public function update($id=null){
+    public function update($id=null){
 
-       
         $data=$this->request->getRawInput();
+        $user=$this->model->find($id);
 
         $user=$this->model->find($id);//buscamos el id que nos llego
         if (!$user)//si el id no existe devolvera un error
         {
             return $this->genericResponse(null,"el usuario no existe",500);
-        }
-
-        if(){
         }
 
         if($this->validate('alerts')){
@@ -85,7 +82,7 @@ class RestUsers extends ResourceController
         $validation= \Config\Services::validation();
         return $this->genericResponse(null,$validation->getErrors(),500); 
      
-    }*/
+    }
 
     public function delete($id=null){
 
