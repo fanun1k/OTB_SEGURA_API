@@ -55,11 +55,13 @@ class RestAlarms extends ResourceController
         {
             return $this->genericResponse(null,"el usuario no existe",500);
         }
-        if($this->validate('alerts')){
+        if(true){
             
-            $alertTypeModel->update($id,[
-                'nombre_tipo_alerta'=>$data['name']            
-            ]);
+            if(isset($data['name'])){
+                $this->model->update($id,[
+                    'name'=>$data['name']            
+                ]);
+            }
 
             return $this-> genericResponse($this->model->find($id),null,200);
         }

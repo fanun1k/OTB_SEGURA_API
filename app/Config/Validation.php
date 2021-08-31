@@ -45,25 +45,27 @@ class Validation
 	];
 
 	public $usersInsert=[
-		'name'=>'required|alpha|min_length[3]|max_length[60]',
-		'email'=>'required|valid_email|is_unique[user.email]|min_length[6]|max_length[40]',
-		'password'=>'required|min_length[5]|max_length[15]',
-		'phone' => 'required|numeric|is_natural|exact_length[8]',
-		'ci' => 'required|numeric|is_natural|is_unique[user.ci]|min_length[6]|max_length[10]',
-		'type' => 'required|numeric|is_natural|exact_length[1]',
-		'otbID' => 'required|numeric|is_natural|min_length[1]'
+		'name'=>'required|min_length[3]|max_length[100]',
+		'email'=>'required|min_length[6]|max_length[35]',
+		'password'=>'required|min_length[5]|max_length[60]',
+		'phone' => 'required|exact_length[8]',
+		'ci' => 'required|min_length[6]|max_length[15]',
+		'type' => 'required|exact_length[1]',
+		'otbID' => 'required|min_length[1]'
 	];
 
 	public $usersUpdate=[
-		'name'=>'required|alpha|min_length[3]|max_length[60]',
-		'password'=>'required|min_length[5]|max_length[15]',
-		'phone' => 'required|numeric|is_natural|exact_length[8]',
-		'type' => 'required|numeric|is_natural|exact_length[1]',
-		'otbID' => 'required|numeric|is_natural|min_length[1]'
+		'name'=>'min_length[3]|max_length[100]',
+		'password'=>'min_length[5]|max_length[35]',
+		'phone' => 'exact_length[60]',
+		'type' => 'exact_length[1]'
 	];
 
 	public $otbsInsert=[
-		'name'=>'required|min_length[5]|max_length[225]' 
+		'name'=>'required|min_length[5]|max_length[100]' 
+	];
+	public $otbsUpdate=[
+		'name'=>'min_length[5]|max_length[100]'
 	];
 	
 	public $activitysInsert=[
@@ -74,8 +76,12 @@ class Validation
 	];
 
 	public $alarmsInsert=[
-		'name'=>'required|min_length[6]|max_length[120]',
-		'otbID'=> 'required|numeric|is_natural|min_length[1]'
+		'name'=>'required|min_length[4]|max_length[100]',
+		'otbID'=> 'required|min_length[1]'
+	];
+
+	public $alarmsUpdate=[
+		'name'=>'min_length[4]|max_length[100]'
 	];
 	
 	//--------------------------------------------------------------------
