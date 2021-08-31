@@ -50,19 +50,17 @@ class RestUsers extends ResourceController
         return $this->genericResponse(null,$validation->getErrors(),500); 
         
     }
-    /*
+    
     public function update($id=null){
 
-        $userModel=new UserModel();
-        //$otbModel = new OtbModel();
         $data=$this->request->getRawInput();
         $user=$this->model->find($id);
-        //$otbModelID = $this->model->find($data['otbID']);
 
         if (!$user)
         {
             return $this->genericResponse(null,"el usuario no existe",500);
         }
+
         if($this->validate('alerts')){
             
             $alertTypeModel->update($id,[
@@ -75,7 +73,7 @@ class RestUsers extends ResourceController
         $validation= \Config\Services::validation();
         return $this->genericResponse(null,$validation->getErrors(),500); 
      
-    }*/
+    }
 
     public function delete($id=null){
 

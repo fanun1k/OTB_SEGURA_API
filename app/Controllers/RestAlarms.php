@@ -46,16 +46,14 @@ class RestAlarms extends ResourceController
         return $this->genericResponse(null,$validation->getErrors(),500); 
         
     }
-    /*
+    
     public function update($id=null){
 
-        $userModel=new UserModel();
-        //$otbModel = new OtbModel();
         $data=$this->request->getRawInput();
-        $user=$this->model->find($id);
-        //$otbModelID = $this->model->find($data['otbID']);
 
-        if (!$user)
+        $user=$this->model->find($id); //Buscamos el id que nos llego
+
+        if (!$user) //Si el id no existe devolvera un error
         {
             return $this->genericResponse(null,"el usuario no existe",500);
         }
@@ -71,7 +69,7 @@ class RestAlarms extends ResourceController
         $validation= \Config\Services::validation();
         return $this->genericResponse(null,$validation->getErrors(),500); 
      
-    }*/
+    }
 
     public function delete($id=null){
 
