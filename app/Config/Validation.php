@@ -45,13 +45,21 @@ class Validation
 	];
 
 	public $usersInsert=[
-		'name'=>'required|min_length[3]|max_length[255]',
-		'email'=>'required|min_length[3]|max_length[255]',
-		'password'=>'required|min_length[6]|max_length[255]',
-		'phone' => 'required|min_length[3]|max_length[255]',
-		'ci' => 'required|min_length[3]|max_length[255]',
-		'type' => 'required|min_length[1]|max_length[1]',
-		'otbID' => 'required|min_length[1]'
+		'name'=>'required|alpha|min_length[3]|max_length[60]',
+		'email'=>'required|valid_email|is_unique[user.email]|min_length[6]|max_length[40]',
+		'password'=>'required|min_length[5]|max_length[15]',
+		'phone' => 'required|numeric|is_natural|exact_length[8]',
+		'ci' => 'required|numeric|is_natural|is_unique[user.ci]|min_length[6]|max_length[10]',
+		'type' => 'required|numeric|is_natural|exact_length[1]',
+		'otbID' => 'required|numeric|is_natural|min_length[1]'
+	];
+
+	public $usersUpdate=[
+		'name'=>'required|alpha|min_length[3]|max_length[60]',
+		'password'=>'required|min_length[5]|max_length[15]',
+		'phone' => 'required|numeric|is_natural|exact_length[8]',
+		'type' => 'required|numeric|is_natural|exact_length[1]',
+		'otbID' => 'required|numeric|is_natural|min_length[1]'
 	];
 
 	public $otbsInsert=[
@@ -66,8 +74,8 @@ class Validation
 	];
 
 	public $alarmsInsert=[
-		'name'=>'required|min_length[6]|max_length[255]',
-		'otbID'=> 'required|min_length[1]|max_length[255]'
+		'name'=>'required|min_length[6]|max_length[120]',
+		'otbID'=> 'required|numeric|is_natural|min_length[1]'
 	];
 	
 	//--------------------------------------------------------------------
