@@ -36,7 +36,7 @@ class RestUsers extends ResourceController
         $otbModel=new OtbsModel();
 
         $idOtb=$otbModel->find($this->request->getPost('otbID'));
-        
+
         if(!$idOtb){
             return $this-> genericResponse(null,'El ID no pertenece a una OTB existente',500);
         }
@@ -76,7 +76,7 @@ class RestUsers extends ResourceController
         if($this->validate('alerts')){
             
             $alertTypeModel->update($id,[
-                'nombre_tipo_alerta'=>$data['name']            
+                'name'=>$data['name']            
             ]);
 
             return $this-> genericResponse($this->model->find($id),null,200);
