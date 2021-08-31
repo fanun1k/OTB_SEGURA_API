@@ -69,13 +69,8 @@ class RestUsers extends ResourceController
             return $this->genericResponse(null,"el usuario no existe",500);
         }
 
-        if(true){
+        if($this->validate('usersUpdate')){
             
-<<<<<<< HEAD
-            $alertTypeModel->update($id,[
-                'name'=>$data['name']            
-            ]);
-=======
             print_r($data);
             if (isset($data['name'])){
                 $this->model->update($id,[
@@ -118,7 +113,6 @@ class RestUsers extends ResourceController
                     'otb_ID'=>$data['otbID']
                 ]);
             }
->>>>>>> 4057c08028abb9b8780649c285deb151054ccf84
 
             return $this-> genericResponse($this->model->find($id),null,200);
         }
@@ -139,7 +133,30 @@ class RestUsers extends ResourceController
         $this->model->delete($id);
         return $this-> genericResponse('El usuario fue eliminado',null,200);    
     }
-        
+
+    public function login()
+    {
+        $email=$this->request->getPost('email');
+        $password=$this->request->getPost('password');
+
+        $data=$this->model->asArray()
+        ->where(['email'=>$email])
+        ->first();
+     
+        if($data){
+            if($password==$data['password']){
+                return $this-> genericResponse($data,null,200);
+            }
+            else{
+                return $this-> genericResponse(null,'Contraseña incorrecta',401);
+            }
+        }
+        else{
+            return $this-> genericResponse(null,'Usuario no registrado',401); 
+        }  
+    }
+
+ 
     private function genericResponse($data,$msj,$code)
     {
         if($code==200)
@@ -154,7 +171,14 @@ class RestUsers extends ResourceController
             return $this->respond(array(
                 "msj"=>$msj,
                 "code"=>$code
-            ));
+            ),500);
+        }
+        if($code==401)
+        {
+            return $this->respond(array(
+                "msj"=>$msj,
+                "code"=>$code
+            ),401);
         }
     }
     
