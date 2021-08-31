@@ -1,12 +1,12 @@
 <?php namespace App\Controllers;
 
 use App\Models\OtbsModel;
-use App\Models\UserModel;
+use App\Models\UsersModel;
 use CodeIgniter\RESTful\ResourceController;
 
 class RestUsers extends ResourceController
 {
-    protected $modelName = 'App\Models\UserModel';
+    protected $modelName = 'App\Models\UsersModel';
     protected $format    = 'json';
     
     public function index()
@@ -64,17 +64,55 @@ class RestUsers extends ResourceController
         $data=$this->request->getRawInput();
         $user=$this->model->find($id);
 
-        $user=$this->model->find($id);//buscamos el id que nos llego
         if (!$user)//si el id no existe devolvera un error
         {
             return $this->genericResponse(null,"el usuario no existe",500);
         }
 
-        if($this->validate('alerts')){
+        if(true){
             
-            $alertTypeModel->update($id,[
-                'nombre_tipo_alerta'=>$data['name']            
-            ]);
+            print_r($data);
+            if (isset($data['name'])){
+                $this->model->update($id,[
+                    'name'=>$data['name']            
+                ]);
+            }
+
+            if (isset($data['email'])){
+                $this->model->update($id,[
+                    'email'=>$data['email']
+                ]);
+            }
+
+            if (isset($data['password'])){
+                $this->model->update($id,[
+                    'password'=>$data['password']
+                ]);
+            }
+    
+            if (isset($data['phone'])){
+                $this->model->update($id,[
+                    'cell_phone'=>$data['phone']
+                ]);
+            }
+
+            if (isset($data['ci'])){
+                $this->model->update($id,[
+                    'ci'=>$data['ci']
+                ]);
+            }
+    
+            if (isset($data['type'])){
+                $this->model->update($id,[
+                    'type'=>$data['type']
+                ]);
+            }
+    
+            if (isset($data['otbID'])){
+                $this->model->update($id,[
+                    'otb_ID'=>$data['otbID']
+                ]);
+            }
 
             return $this-> genericResponse($this->model->find($id),null,200);
         }
