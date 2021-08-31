@@ -71,16 +71,9 @@ class RestUsers extends ResourceController
 
         if($this->validate('usersUpdate')){
             
-            print_r($data);
             if (isset($data['name'])){
                 $this->model->update($id,[
-                    'name'=>$data['name']            
-                ]);
-            }
-
-            if (isset($data['email'])){
-                $this->model->update($id,[
-                    'email'=>$data['email']
+                    'name'=>$data['name']          
                 ]);
             }
 
@@ -95,22 +88,10 @@ class RestUsers extends ResourceController
                     'cell_phone'=>$data['phone']
                 ]);
             }
-
-            if (isset($data['ci'])){
-                $this->model->update($id,[
-                    'ci'=>$data['ci']
-                ]);
-            }
     
             if (isset($data['type'])){
                 $this->model->update($id,[
                     'type'=>$data['type']
-                ]);
-            }
-    
-            if (isset($data['otbID'])){
-                $this->model->update($id,[
-                    'otb_ID'=>$data['otbID']
                 ]);
             }
 

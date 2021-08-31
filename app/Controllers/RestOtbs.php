@@ -34,8 +34,6 @@ class RestOtbs extends ResourceController
 
         $otbModel =new OtbsModel(); 
 
-
-
         if($this->validate('otbsInsert')){
 
             $id=$otbModel->insert([
@@ -49,10 +47,9 @@ class RestOtbs extends ResourceController
         return $this->genericResponse(null,$validation->getErrors(),500);
         
     }
-    /*
+
     public function update($id=null){
 
-        $otbModel=new OtbsModel();
         $data=$this->request->getRawInput();
         $otb=$this->model->find($id);
 
@@ -60,11 +57,14 @@ class RestOtbs extends ResourceController
         {
             return $this->genericResponse(null,"la otb no existe",500);
         }
-        if($this->validate('otbs')){
+
+        if(true){
             
-            $otbModel->update($id,[
-                'nombre'=>$data['name']            
-            ]);
+            if(isset($data['name'])) {
+                $this->model->update($id,[
+                    'name'=>$data['name']            
+                ]);
+            }
 
             return $this-> genericResponse($this->model->find($id),null,200);
         }
@@ -72,7 +72,7 @@ class RestOtbs extends ResourceController
         $validation= \Config\Services::validation();
         return $this->genericResponse(null,$validation->getErrors(),500); 
      
-    }*/
+    }
 
     public function delete($id=null){ 
 
