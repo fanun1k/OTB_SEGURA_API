@@ -125,7 +125,7 @@ class RestUsers extends ResourceController
 
         //verificamos si llego un json, si es asi entonces las variables que utilizavamos
         // ahora pasaran a ser igual al valor del json
-        if($Jsondata){ 
+        if($Jsondata){
 
             $email=$Jsondata['Email'];
             $password=$Jsondata['Password'];
