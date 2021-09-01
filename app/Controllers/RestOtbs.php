@@ -37,7 +37,7 @@ class RestOtbs extends ResourceController
         if($this->validate('otbsInsert')){
 
             $id=$otbModel->insert([
-                'name'=>$this->request->getPost('Name')
+                'Name'=>$this->request->getPost('Name')
             ]);
 
             return $this-> genericResponse($this->model->find($id),null,200);
@@ -60,7 +60,7 @@ class RestOtbs extends ResourceController
 
         if(isset($data['Name'])) {
             $this->model->update($id,[
-                'name'=>$data['Name']            
+                'Name'=>$data['Name']            
             ]);
         }
 
@@ -86,15 +86,15 @@ class RestOtbs extends ResourceController
         if($code==200)
         {
             return $this->respond(array(
-                "data"=>$data,
-                "code"=>$code
+                "Data"=>$data,
+                "Code"=>$code
             ));
         }
         if($code==500)
         {
             return $this->respond(array(
-                "msj"=>$msj,
-                "code"=>$code
+                "Msj"=>$msj,
+                "Code"=>$code
             ));
         }
     }

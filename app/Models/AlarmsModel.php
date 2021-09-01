@@ -7,9 +7,9 @@ class AlarmsModel extends Model
     //Nombre de la tabla cambiar sobre la bdd
     protected $table='alarm';
     //El nombre del ID en la tabla
-    protected $primaryKey= 'alarm_ID';
+    protected $primaryKey= 'Alarm_ID';
     //Last columnas que van a afectar
-    protected $allowedFields= ['name','otb_ID'];
+    protected $allowedFields= ['Name','Otb_ID'];
     
     public function get($id = null)//el metodo lo dejo
     {
@@ -17,7 +17,7 @@ class AlarmsModel extends Model
             return $this->findAll();
         }
         return $this->asArray()
-            ->where(['alarm_ID'=>$id])// solo cambiar aqui el nombre de la columna de la tabla
+            ->where(['Alarm_ID'=>$id])// solo cambiar aqui el nombre de la columna de la tabla
             ->first();
     }
 }
