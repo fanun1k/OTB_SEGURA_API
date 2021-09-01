@@ -44,13 +44,13 @@ class RestUsers extends ResourceController
         if($this->validate('usersInsert')){
 
             $id=$this->model->insert([
-                'name'=>$this->request->getPost('name'),
-                'password'=>$this->request->getPost('password'),
-                'cell_phone'=>$this->request->getPost('phone'),
-                'ci'=>$this->request->getPost('ci'),
-                'type'=>$this->request->getPost('type'),
-                'otb_ID'=>$this->request->getPost('otbID'),
-                'email'=>$this->request->getPost('email')
+                'name'=>$this->request->getPost('Name'),
+                'password'=>$this->request->getPost('Password'),
+                'cell_phone'=>$this->request->getPost('Phone'),
+                'ci'=>$this->request->getPost('Ci'),
+                'type'=>$this->request->getPost('Type'),
+                'otb_ID'=>$this->request->getPost('OtbID'),
+                'email'=>$this->request->getPost('Email')
             ]);
             return $this-> genericResponse($this->model->find($id),null,200);
         }
@@ -69,27 +69,27 @@ class RestUsers extends ResourceController
             return $this->genericResponse(null,"el usuario no existe",500);
         }
 
-        if (isset($data['name'])){
+        if (isset($data['Name'])){
             $this->model->update($id,[
-                'name'=>$data['name']          
+                'name'=>$data['Name']          
             ]);
         }
 
-        if (isset($data['password'])){
+        if (isset($data['Password'])){
             $this->model->update($id,[
-                'password'=>$data['password']
+                'password'=>$data['Password']
             ]);
         }
 
-        if (isset($data['phone'])){
+        if (isset($data['Phone'])){
             $this->model->update($id,[
-                'cell_phone'=>$data['phone']
+                'cell_phone'=>$data['Phone']
             ]);
         }
 
-        if (isset($data['type'])){
+        if (isset($data['Type'])){
             $this->model->update($id,[
-                'type'=>$data['type']
+                'type'=>$data['Type']
             ]);
         }
 
@@ -105,14 +105,17 @@ class RestUsers extends ResourceController
         {
             return $this->genericResponse(null,"el usuario no existe",500);
         }
+
+        
+
         $this->model->delete($id);
         return $this-> genericResponse('El usuario fue eliminado',null,200);    
     }
 
     public function login()
     {
-        $email=$this->request->getPost('email');
-        $password=$this->request->getPost('password');
+        $email=$this->request->getPost('Email');
+        $password=$this->request->getPost('Password');
 
         $data=$this->model->asArray()
         ->where(['email'=>$email])

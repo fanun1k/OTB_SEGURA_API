@@ -37,7 +37,7 @@ class RestOtbs extends ResourceController
         if($this->validate('otbsInsert')){
 
             $id=$otbModel->insert([
-                'name'=>$this->request->getPost('name')
+                'name'=>$this->request->getPost('Name')
             ]);
 
             return $this-> genericResponse($this->model->find($id),null,200);
@@ -58,9 +58,9 @@ class RestOtbs extends ResourceController
             return $this->genericResponse(null,"la otb no existe",500);
         }
 
-        if(isset($data['name'])) {
+        if(isset($data['Name'])) {
             $this->model->update($id,[
-                'name'=>$data['name']            
+                'name'=>$data['Name']            
             ]);
         }
 
