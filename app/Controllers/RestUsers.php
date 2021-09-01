@@ -50,6 +50,7 @@ class RestUsers extends ResourceController
 
         if  (!$data){
             $data = $this->request->getJSON(true);
+            
         }
         
         if($this->validate('usersInsert')){
