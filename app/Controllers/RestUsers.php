@@ -36,21 +36,32 @@ class RestUsers extends ResourceController
         $otbModel=new OtbsModel();
 
         $idOtb=$otbModel->find($this->request->getPost('otbID'));
+        /*$data = array('Name' => $this->request->getPost('Name'),
+                       'Password' => $this->request->getPost('Password'), 
+                       'Cell_phone'=>$this->request->getPost('Phone'),
+                       'Ci'=>$this->request->getPost('Ci'),
+                       'Type'=>$this->request->getPost('Type'),
+                       'Otb_ID'=>$this->request->getPost('Otb_ID'),
+                       'Email'=>$this->request->getPost('Email'));*/
 
         if(!$idOtb){
             return $this-> genericResponse(null,'El ID no pertenece a una OTB existente',500);
+        }
+
+        if  (!$data){
+            $data = $this->request->getJSON(true);
         }
         
         if($this->validate('usersInsert')){
 
             $id=$this->model->insert([
-                'name'=>$this->request->getPost('Name'),
-                'password'=>$this->request->getPost('Password'),
-                'cell_phone'=>$this->request->getPost('Phone'),
-                'ci'=>$this->request->getPost('Ci'),
-                'type'=>$this->request->getPost('Type'),
-                'otb_ID'=>$this->request->getPost('OtbID'),
-                'email'=>$this->request->getPost('Email')
+                'Name'=>$data['Name'],
+                'Password'=>$data['Password'],
+                'Cell_phone'=>$data['Phone'],
+                'Ci'=>$data['Ci'],
+                'Type'=>$data['Type'],
+                'Otb_ID'=>$data['Otb_ID'],
+                'Email'=>$data['Email']
             ]);
             return $this-> genericResponse($this->model->find($id),null,200);
         }
@@ -67,6 +78,11 @@ class RestUsers extends ResourceController
         if (!$user)//si el id no existe devolvera un error
         {
             return $this->genericResponse(null,"el usuario no existe",500);
+        }
+        
+
+        if (!$data){
+            $data = $this->request->getJSON(true);
         }
 
         if (isset($data['Name'])){
