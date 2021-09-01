@@ -45,13 +45,13 @@ class Validation
 	];
 
 	public $usersInsert=[
-		'name'=>'required|min_length[3]|max_length[100]',
-		'email'=>'required|min_length[6]|max_length[35]',
-		'password'=>'required|min_length[5]|max_length[60]',
-		'phone' => 'required|exact_length[8]',
-		'ci' => 'required|min_length[6]|max_length[15]',
-		'type' => 'required|exact_length[1]',
-		'otbID' => 'required|min_length[1]'
+		'Name'=>'required|min_length[3]|max_length[100]',
+		'Email'=>'required|min_length[6]|max_length[35]',
+		'Password'=>'required|min_length[5]|max_length[60]',
+		'Phone' => 'required|exact_length[8]',
+		'Ci' => 'required|min_length[6]|max_length[15]',
+		'Type' => 'required|exact_length[1]',
+		'OtbID' => 'required|min_length[1]'
 	];
 
 	public $usersUpdate=[
@@ -62,7 +62,7 @@ class Validation
 	];
 
 	public $otbsInsert=[
-		'name'=>'required|min_length[5]|max_length[100]' 
+		'Name'=>'required|min_length[5]|max_length[100]' 
 	];
 	public $otbsUpdate=[
 		'name'=>'min_length[5]|max_length[100]'
@@ -76,8 +76,8 @@ class Validation
 	];
 
 	public $alarmsInsert=[
-		'name'=>'required|min_length[4]|max_length[100]',
-		'otbID'=> 'required|min_length[1]'
+		'Name'=>'required|min_length[4]|max_length[100]',
+		'OtbID'=> 'required|min_length[1]'
 	];
 
 	public $alarmsUpdate=[
