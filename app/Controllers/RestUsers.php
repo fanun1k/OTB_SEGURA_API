@@ -36,7 +36,7 @@ class RestUsers extends ResourceController
         $otbModel=new OtbsModel();
 
         $idOtb=$otbModel->find($this->request->getPost('otbID'));
-        
+
         if(!$idOtb){
             return $this-> genericResponse(null,'El ID no pertenece a una OTB existente',500);
         }
@@ -108,7 +108,30 @@ class RestUsers extends ResourceController
         $this->model->delete($id);
         return $this-> genericResponse('El usuario fue eliminado',null,200);    
     }
-        
+
+    public function login()
+    {
+        $email=$this->request->getPost('email');
+        $password=$this->request->getPost('password');
+
+        $data=$this->model->asArray()
+        ->where(['email'=>$email])
+        ->first();
+     
+        if($data){
+            if($password==$data['password']){
+                return $this-> genericResponse($data,null,200);
+            }
+            else{
+                return $this-> genericResponse(null,'Contraseña incorrecta',401);
+            }
+        }
+        else{
+            return $this-> genericResponse(null,'Usuario no registrado',401); 
+        }  
+    }
+
+ 
     private function genericResponse($data,$msj,$code)
     {
         if($code==200)
@@ -123,7 +146,14 @@ class RestUsers extends ResourceController
             return $this->respond(array(
                 "msj"=>$msj,
                 "code"=>$code
-            ));
+            ),500);
+        }
+        if($code==401)
+        {
+            return $this->respond(array(
+                "msj"=>$msj,
+                "code"=>$code
+            ),401);
         }
     }
     
