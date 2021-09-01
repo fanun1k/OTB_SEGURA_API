@@ -48,10 +48,10 @@ class Validation
 		'Name'=>'required|min_length[3]|max_length[100]',
 		'Email'=>'required|min_length[6]|max_length[35]',
 		'Password'=>'required|min_length[5]|max_length[60]',
-		'Phone' => 'required|exact_length[8]',
+		'Cell_phone' => 'required|exact_length[8]',
 		'Ci' => 'required|min_length[6]|max_length[15]',
 		'Type' => 'required|exact_length[1]',
-		'OtbID' => 'required|min_length[1]'
+		'Otb_ID' => 'required|min_length[1]'
 	];
 
 	public $usersUpdate=[
@@ -77,7 +77,7 @@ class Validation
 
 	public $alarmsInsert=[
 		'Name'=>'required|min_length[4]|max_length[100]',
-		'OtbID'=> 'required|min_length[1]'
+		'Otb_ID'=> 'required|min_length[1]'
 	];
 
 	public $alarmsUpdate=[

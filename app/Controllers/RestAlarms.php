@@ -75,7 +75,13 @@ class RestAlarms extends ResourceController
         {
             return $this->genericResponse(null,"La alarma no existe",500);
         }
-        $this->model->delete($id);
+
+        if  ($alarm['state'] == 1){
+            $this->model->update($id,[
+                'state'=>0
+            ]);
+        }
+
         return $this-> genericResponse('La alarma fue eliminado',null,200);    
     }
         
