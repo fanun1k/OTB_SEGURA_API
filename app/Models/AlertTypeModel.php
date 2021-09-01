@@ -5,8 +5,8 @@ use CodeIgniter\Model;
 class AlertTypeModel extends Model
 {
     protected $table='alert_type';
-    protected $primaryKey= 'alert_type_ID';
-    protected $allowedFields= ['name','state','otb_ID'];
+    protected $primaryKey= 'Alert_type_ID';
+    protected $allowedFields= ['Name','Atate','Otb_ID'];
 
     public function get($id = null)
     {
@@ -14,7 +14,7 @@ class AlertTypeModel extends Model
             return $this->findAll();
         }
         return $this->asArray()
-            ->where(['alert_type_ID'=>$id])
+            ->where(['Alert_type_ID'=>$id])
             ->first();
     }
 }

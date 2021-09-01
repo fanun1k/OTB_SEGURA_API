@@ -44,13 +44,13 @@ class RestUsers extends ResourceController
         if($this->validate('usersInsert')){
 
             $id=$this->model->insert([
-                'name'=>$this->request->getPost('Name'),
-                'password'=>$this->request->getPost('Password'),
-                'cell_phone'=>$this->request->getPost('Phone'),
-                'ci'=>$this->request->getPost('Ci'),
-                'type'=>$this->request->getPost('Type'),
-                'otb_ID'=>$this->request->getPost('OtbID'),
-                'email'=>$this->request->getPost('Email')
+                'Name'=>$this->request->getPost('Name'),
+                'Password'=>$this->request->getPost('Password'),
+                'Cell_phone'=>$this->request->getPost('Phone'),
+                'Ci'=>$this->request->getPost('Ci'),
+                'Type'=>$this->request->getPost('Type'),
+                'Otb_ID'=>$this->request->getPost('OtbID'),
+                'Email'=>$this->request->getPost('Email')
             ]);
             return $this-> genericResponse($this->model->find($id),null,200);
         }
@@ -63,33 +63,37 @@ class RestUsers extends ResourceController
 
         $data=$this->request->getRawInput();
         $user=$this->model->find($id);
+        
 
         if (!$user)//si el id no existe devolvera un error
         {
             return $this->genericResponse(null,"el usuario no existe",500);
         }
+        if(!$data){
+            $data=$this->request->getJSON(true); 
+        }
 
         if (isset($data['Name'])){
             $this->model->update($id,[
-                'name'=>$data['Name']          
+                'Name'=>$data['Name']          
             ]);
         }
 
         if (isset($data['Password'])){
             $this->model->update($id,[
-                'password'=>$data['Password']
+                'Password'=>$data['Password']
             ]);
         }
 
         if (isset($data['Phone'])){
             $this->model->update($id,[
-                'cell_phone'=>$data['Phone']
+                'Cell_phone'=>$data['Phone']
             ]);
         }
 
         if (isset($data['Type'])){
             $this->model->update($id,[
-                'type'=>$data['Type']
+                'Type'=>$data['Type']
             ]);
         }
 
@@ -128,12 +132,12 @@ class RestUsers extends ResourceController
             $password=$Jsondata['Password'];
         }        
         $Userdata=$this->model->asArray()
-        ->where(['email'=>$email])
+        ->where(['Email'=>$email])
         ->first();
      
         if($Userdata){
-            if($password==$Userdata['password']){
-                if($Userdata['state']==0){
+            if($password==$Userdata['Password']){
+                if($Userdata['State']==0){
                     return $this-> genericResponse(null,'Cuenta de usuario inhabilitada',401);
                 }
                 return $this-> genericResponse($Userdata,null,200);
