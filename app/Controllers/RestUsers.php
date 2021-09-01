@@ -69,37 +69,31 @@ class RestUsers extends ResourceController
             return $this->genericResponse(null,"el usuario no existe",500);
         }
 
-        if($this->validate('usersUpdate')){
-            
-            if (isset($data['name'])){
-                $this->model->update($id,[
-                    'name'=>$data['name']          
-                ]);
-            }
-
-            if (isset($data['password'])){
-                $this->model->update($id,[
-                    'password'=>$data['password']
-                ]);
-            }
-    
-            if (isset($data['phone'])){
-                $this->model->update($id,[
-                    'cell_phone'=>$data['phone']
-                ]);
-            }
-    
-            if (isset($data['type'])){
-                $this->model->update($id,[
-                    'type'=>$data['type']
-                ]);
-            }
-
-            return $this-> genericResponse($this->model->find($id),null,200);
+        if (isset($data['name'])){
+            $this->model->update($id,[
+                'name'=>$data['name']          
+            ]);
         }
-        
-        $validation= \Config\Services::validation();
-        return $this->genericResponse(null,$validation->getErrors(),500); 
+
+        if (isset($data['password'])){
+            $this->model->update($id,[
+                'password'=>$data['password']
+            ]);
+        }
+
+        if (isset($data['phone'])){
+            $this->model->update($id,[
+                'cell_phone'=>$data['phone']
+            ]);
+        }
+
+        if (isset($data['type'])){
+            $this->model->update($id,[
+                'type'=>$data['type']
+            ]);
+        }
+
+        return $this-> genericResponse($this->model->find($id),null,200);
      
     }
 
