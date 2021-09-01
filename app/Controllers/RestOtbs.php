@@ -77,7 +77,13 @@ class RestOtbs extends ResourceController
         {
             return $this->genericResponse(null,"la otb no existe",500); 
         }
-        $this->model->delete($id);
+        
+        if  ($otb['state'] == 1){
+            $this->model->update($id,[
+                'state'=>0
+            ]);
+        }
+
         return $this-> genericResponse('La otb fue eliminada eliminada',null,200); 
     }
         

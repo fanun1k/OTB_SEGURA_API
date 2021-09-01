@@ -105,10 +105,14 @@ class RestUsers extends ResourceController
         {
             return $this->genericResponse(null,"el usuario no existe",500);
         }
-
+        
+        if  ($user['state'] == 1){
+            $this->model->update($id,[
+                'state'=>0
+            ]);
+        }
         
 
-        $this->model->delete($id);
         return $this-> genericResponse('El usuario fue eliminado',null,200);    
     }
 
