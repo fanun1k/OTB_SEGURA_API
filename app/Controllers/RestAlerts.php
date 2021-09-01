@@ -38,10 +38,10 @@ class RestAlerts extends ResourceController
         
         if($this->validate('activitysInsert')){
             $id=$alertModel->insert([
-                'longitude'=>$this->request->getPost('longitude'),
-                'latitude'=>$this->request->getPost('latitude'),
-                'alert_type_ID'=>$this->request->getPost('alertID'),
-                'user_ID'=>$this->request->getPost('userID')
+                'Longitude'=>$this->request->getPost('Longitude'),
+                'Latitude'=>$this->request->getPost('Latitude'),
+                'Alert_type_ID'=>$this->request->getPost('AlertID'),
+                'User_ID'=>$this->request->getPost('UserID')
             ]);
             return $this-> genericResponse($this->model->find($id),null,200);
         }
@@ -62,7 +62,7 @@ class RestAlerts extends ResourceController
 
         if($this->validate('alerts')){
             $this->model->update($id,[
-                'nombre_tipo_alerta'=>$data['name']            
+                'Name'=>$data['Name']            
             ]);
 
             return $this-> genericResponse($this->model->find($id),null,200);
@@ -89,15 +89,15 @@ class RestAlerts extends ResourceController
         if($code==200)
         {
             return $this->respond(array(
-                "data"=>$data,
-                "code"=>$code
+                "Data"=>$data,
+                "Code"=>$code
             ));
         }
         if($code==500)
         {
             return $this->respond(array(
-                "msj"=>$msj,
-                "code"=>$code
+                "Msj"=>$msj,
+                "Code"=>$code
             ));
         }
     }

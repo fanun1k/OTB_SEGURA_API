@@ -36,12 +36,12 @@ class RestAlertType extends ResourceController
         $obt_Model=new OtbsModel();
 
         if($this->validate('alerts')){ 
-            if(!$obt_Model->find($this->request->getPost('otb_ID'))){
+            if(!$obt_Model->find($this->request->getPost('Otb_ID'))){
                 return $this-> genericResponse(null,'el ID de otb no existe',500);
             }
             $id=$this->model->insert([
-                'name'=>$this->request->getPost('name'),
-                'otb_ID'=>$this->request->getPost('otb_ID'),
+                'Name'=>$this->request->getPost('Name'),
+                'Otb_ID'=>$this->request->getPost('Otb_ID'),
             ]);
             return $this-> genericResponse($this->model->find($id),null,200);
         }
@@ -64,8 +64,8 @@ class RestAlertType extends ResourceController
         if($this->validate('alertsUpdate')){
             
             $alertTypeModel->update($id,[
-                'name'=>$data['name'],
-                'state'=>$data['state']           
+                'Name'=>$data['Name'],
+                'State'=>$data['State']           
             ]);
 
             return $this-> genericResponse($this->model->find($id),null,200);
@@ -93,15 +93,15 @@ class RestAlertType extends ResourceController
         if($code==200)
         {
             return $this->respond(array(
-                "data"=>$data,
-                "code"=>$code
+                "Data"=>$data,
+                "Code"=>$code
             ));
         }
         if($code==500)
         {
             return $this->respond(array(
-                "msj"=>$msj,
-                "code"=>$code
+                "Msj"=>$msj,
+                "Code"=>$code
             ));
         }
     }

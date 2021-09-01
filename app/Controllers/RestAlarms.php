@@ -34,8 +34,8 @@ class RestAlarms extends ResourceController
  
         if($this->validate('alarmsInsert')){
             $id=$this->model->insert([
-                'name'=>$this->request->getPost('Name'),
-                'otb_ID'=>$this->request->getPost('OtbID')
+                'Name'=>$this->request->getPost('Name'),
+                'Otb_ID'=>$this->request->getPost('Otb_ID')
             ]);
             return $this-> genericResponse($this->model->find($id),null,200);
         }
@@ -59,7 +59,7 @@ class RestAlarms extends ResourceController
 
         if(isset($data['Name'])){
             $this->model->update($id,[
-                'name'=>$data['Name']            
+                'Name'=>$data['Name']            
             ]);
         }
 
@@ -90,15 +90,15 @@ class RestAlarms extends ResourceController
         if($code==200)
         {
             return $this->respond(array(
-                "data"=>$data,
-                "code"=>$code
+                "Data"=>$data,
+                "Code"=>$code
             ));
         }
         if($code==500)
         {
             return $this->respond(array(
-                "msj"=>$msj,
-                "code"=>$code
+                "Msj"=>$msj,
+                "Code"=>$code
             ));
         }
     }

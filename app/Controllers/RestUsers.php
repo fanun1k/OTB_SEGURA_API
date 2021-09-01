@@ -74,6 +74,7 @@ class RestUsers extends ResourceController
 
         $data=$this->request->getRawInput();
         $user=$this->model->find($id);
+        
 
         if (!$user)//si el id no existe devolvera un error
         {
@@ -87,25 +88,25 @@ class RestUsers extends ResourceController
 
         if (isset($data['Name'])){
             $this->model->update($id,[
-                'name'=>$data['Name']          
+                'Name'=>$data['Name']          
             ]);
         }
 
         if (isset($data['Password'])){
             $this->model->update($id,[
-                'password'=>$data['Password']
+                'Password'=>$data['Password']
             ]);
         }
 
         if (isset($data['Phone'])){
             $this->model->update($id,[
-                'cell_phone'=>$data['Phone']
+                'Cell_phone'=>$data['Phone']
             ]);
         }
 
         if (isset($data['Type'])){
             $this->model->update($id,[
-                'type'=>$data['Type']
+                'Type'=>$data['Type']
             ]);
         }
 
@@ -148,12 +149,12 @@ class RestUsers extends ResourceController
             $password=$Jsondata['Password'];
         }        
         $Userdata=$this->model->asArray()
-        ->where(['email'=>$email])
+        ->where(['Email'=>$email])
         ->first();
      
         if($Userdata){
-            if($password==$Userdata['password']){
-                if($Userdata['state']==0){
+            if($password==$Userdata['Password']){
+                if($Userdata['State']==0){
                     return $this-> genericResponse(null,'Cuenta de usuario inhabilitada',401);
                 }
                 return $this-> genericResponse($Userdata,null,200);

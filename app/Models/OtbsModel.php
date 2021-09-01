@@ -6,9 +6,9 @@ class OtbsModel extends Model
 {
     //nOMBRE DE LA TABLA EN BDD
     protected $table='otb';
-    protected $primaryKey= 'otb_ID';
+    protected $primaryKey= 'Otb_ID';
     //Nombre del id de la tabla
-    protected $allowedFields= ['name','state']; // las columnas que vamos a afectar
+    protected $allowedFields= ['Name','State']; // las columnas que vamos a afectar
 
     public function get($id = null) 
     {
@@ -16,7 +16,7 @@ class OtbsModel extends Model
             return $this->findAll();
         }
         return $this->asArray()
-            ->where(['otb_ID'=>$id]) 
+            ->where(['Otb_ID'=>$id]) 
             ->first();
     }
 }
