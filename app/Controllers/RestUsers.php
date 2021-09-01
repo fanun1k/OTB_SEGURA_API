@@ -69,21 +69,11 @@ class RestUsers extends ResourceController
             return $this->genericResponse(null,"el usuario no existe",500);
         }
 
-<<<<<<< HEAD
-        if(true){
-            
-            if (isset($data['name'])){
-                $this->model->update($id,[
-                    'name'=>$data['name']          
-                ]);
-            }
-=======
         if (isset($data['Name'])){
             $this->model->update($id,[
                 'name'=>$data['Name']          
             ]);
         }
->>>>>>> 01844553baaa923a4a2181966d017169afe7815e
 
         if (isset($data['Password'])){
             $this->model->update($id,[
