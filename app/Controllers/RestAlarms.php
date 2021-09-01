@@ -34,8 +34,8 @@ class RestAlarms extends ResourceController
  
         if($this->validate('alarmsInsert')){
             $id=$this->model->insert([
-                'name'=>$this->request->getPost('name'),
-                'otb_ID'=>$this->request->getPost('otbID')
+                'name'=>$this->request->getPost('Name'),
+                'otb_ID'=>$this->request->getPost('OtbID')
             ]);
             return $this-> genericResponse($this->model->find($id),null,200);
         }
@@ -55,20 +55,16 @@ class RestAlarms extends ResourceController
         {
             return $this->genericResponse(null,"el usuario no existe",500);
         }
-        if(true){
-            
-            if(isset($data['name'])){
-                $this->model->update($id,[
-                    'name'=>$data['name']            
-                ]);
-            }
-
-            return $this-> genericResponse($this->model->find($id),null,200);
-        }
         
-        $validation= \Config\Services::validation();
-        return $this->genericResponse(null,$validation->getErrors(),500); 
-     
+
+        if(isset($data['Name'])){
+            $this->model->update($id,[
+                'name'=>$data['Name']            
+            ]);
+        }
+
+        return $this-> genericResponse($this->model->find($id),null,200);
+        
     }
 
     public function delete($id=null){

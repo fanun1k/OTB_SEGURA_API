@@ -44,13 +44,13 @@ class RestUsers extends ResourceController
         if($this->validate('usersInsert')){
 
             $id=$this->model->insert([
-                'name'=>$this->request->getPost('name'),
-                'password'=>$this->request->getPost('password'),
-                'cell_phone'=>$this->request->getPost('phone'),
-                'ci'=>$this->request->getPost('ci'),
-                'type'=>$this->request->getPost('type'),
-                'otb_ID'=>$this->request->getPost('otbID'),
-                'email'=>$this->request->getPost('email')
+                'name'=>$this->request->getPost('Name'),
+                'password'=>$this->request->getPost('Password'),
+                'cell_phone'=>$this->request->getPost('Phone'),
+                'ci'=>$this->request->getPost('Ci'),
+                'type'=>$this->request->getPost('Type'),
+                'otb_ID'=>$this->request->getPost('OtbID'),
+                'email'=>$this->request->getPost('Email')
             ]);
             return $this-> genericResponse($this->model->find($id),null,200);
         }
@@ -69,6 +69,7 @@ class RestUsers extends ResourceController
             return $this->genericResponse(null,"el usuario no existe",500);
         }
 
+<<<<<<< HEAD
         if(true){
             
             if (isset($data['name'])){
@@ -76,30 +77,33 @@ class RestUsers extends ResourceController
                     'name'=>$data['name']          
                 ]);
             }
-
-            if (isset($data['password'])){
-                $this->model->update($id,[
-                    'password'=>$data['password']
-                ]);
-            }
-    
-            if (isset($data['phone'])){
-                $this->model->update($id,[
-                    'cell_phone'=>$data['phone']
-                ]);
-            }
-    
-            if (isset($data['type'])){
-                $this->model->update($id,[
-                    'type'=>$data['type']
-                ]);
-            }
-
-            return $this-> genericResponse($this->model->find($id),null,200);
+=======
+        if (isset($data['Name'])){
+            $this->model->update($id,[
+                'name'=>$data['Name']          
+            ]);
         }
-        
-        $validation= \Config\Services::validation();
-        return $this->genericResponse(null,$validation->getErrors(),500); 
+>>>>>>> 01844553baaa923a4a2181966d017169afe7815e
+
+        if (isset($data['Password'])){
+            $this->model->update($id,[
+                'password'=>$data['Password']
+            ]);
+        }
+
+        if (isset($data['Phone'])){
+            $this->model->update($id,[
+                'cell_phone'=>$data['Phone']
+            ]);
+        }
+
+        if (isset($data['Type'])){
+            $this->model->update($id,[
+                'type'=>$data['Type']
+            ]);
+        }
+
+        return $this-> genericResponse($this->model->find($id),null,200);
      
     }
 
@@ -111,6 +115,9 @@ class RestUsers extends ResourceController
         {
             return $this->genericResponse(null,"el usuario no existe",500);
         }
+
+        
+
         $this->model->delete($id);
         return $this-> genericResponse('El usuario fue eliminado',null,200);    
     }
