@@ -69,7 +69,7 @@ class RestUsers extends ResourceController
             return $this->genericResponse(null,"el usuario no existe",500);
         }
 
-        if($this->validate('usersUpdate')){
+        if(true){
             
             if (isset($data['name'])){
                 $this->model->update($id,[
@@ -117,16 +117,29 @@ class RestUsers extends ResourceController
 
     public function login()
     {
-        $email=$this->request->getPost('email');
-        $password=$this->request->getPost('password');
+        $email=$this->request->getPost('Email');
+        $password=$this->request->getPost('Password');
 
-        $data=$this->model->asArray()
+        //varibale Jsondata se llenara solo si recibio un json en lugar de un form-data
+        $Jsondata=$this->request->getJSON(true); 
+
+        //verificamos si llego un json, si es asi entonces las variables que utilizavamos
+        // ahora pasaran a ser igual al valor del json
+        if($Jsondata){ 
+
+            $email=$Jsondata['Email'];
+            $password=$Jsondata['Password'];
+        }        
+        $Userdata=$this->model->asArray()
         ->where(['email'=>$email])
         ->first();
      
-        if($data){
-            if($password==$data['password']){
-                return $this-> genericResponse($data,null,200);
+        if($Userdata){
+            if($password==$Userdata['password']){
+                if($Userdata['state']==0){
+                    return $this-> genericResponse(null,'Cuenta de usuario inhabilitada',401);
+                }
+                return $this-> genericResponse($Userdata,null,200);
             }
             else{
                 return $this-> genericResponse(null,'Contraseña incorrecta',401);
