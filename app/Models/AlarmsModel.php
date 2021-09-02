@@ -9,7 +9,7 @@ class AlarmsModel extends Model
     //El nombre del ID en la tabla
     protected $primaryKey= 'Alarm_ID';
     //Last columnas que van a afectar
-    protected $allowedFields= ['Name','Otb_ID'];
+    protected $allowedFields= ['Name','State','Otb_ID'];
     
     public function get($id = null)//el metodo lo dejo
     {

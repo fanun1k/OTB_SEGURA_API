@@ -32,33 +32,33 @@ class RestUsers extends ResourceController
     }
 
     public function create(){
-
+        
         $otbModel=new OtbsModel();
-
-        $idOtb=$otbModel->find($this->request->getPost('otbID'));
-        /*$data = array('Name' => $this->request->getPost('Name'),
+        
+        $data = array('Name' => $this->request->getPost('Name'),
                        'Password' => $this->request->getPost('Password'), 
-                       'Cell_phone'=>$this->request->getPost('Phone'),
+                       'Cell_phone'=>$this->request->getPost('Cell_phone'),
                        'Ci'=>$this->request->getPost('Ci'),
                        'Type'=>$this->request->getPost('Type'),
                        'Otb_ID'=>$this->request->getPost('Otb_ID'),
-                       'Email'=>$this->request->getPost('Email'));*/
+                       'Email'=>$this->request->getPost('Email'));
+
+        if (!array_filter($data)){
+            $data = $this->request->getJSON(true);
+        }
+        
+        $idOtb=$otbModel->find($data['Otb_ID']);
 
         if(!$idOtb){
             return $this-> genericResponse(null,'El ID no pertenece a una OTB existente',500);
         }
 
-        if  (!$data){
-            $data = $this->request->getJSON(true);
-            
-        }
-        
         if($this->validate('usersInsert')){
 
             $id=$this->model->insert([
                 'Name'=>$data['Name'],
                 'Password'=>$data['Password'],
-                'Cell_phone'=>$data['Phone'],
+                'Cell_phone'=>$data['Cell_phone'],
                 'Ci'=>$data['Ci'],
                 'Type'=>$data['Type'],
                 'Otb_ID'=>$data['Otb_ID'],
@@ -124,9 +124,9 @@ class RestUsers extends ResourceController
             return $this->genericResponse(null,"el usuario no existe",500);
         }
         
-        if  ($user['state'] == 1){
+        if  ($user['State'] == 1){
             $this->model->update($id,[
-                'state'=>0
+                'State'=>0
             ]);
         }
         
