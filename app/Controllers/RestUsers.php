@@ -147,10 +147,10 @@ class RestUsers extends ResourceController
         $Userdata=$this->model->asArray()
         ->where(['Email'=>$email])
         ->first();
-     
+     print_r($Userdata);
         if($Userdata){
-            if($password==$Userdata['Password']){
-                if($Userdata['State']==0){
+            if($password==$Userdata['password']){
+                if($Userdata['state']==0){
                     return $this-> genericResponse(null,'Cuenta de usuario inhabilitada',401);
                 }
                 return $this-> genericResponse($Userdata,null,200);
@@ -170,7 +170,7 @@ class RestUsers extends ResourceController
         if($code==200)
         {
             return $this->respond(array(
-                "data"=>$data,
+                "data"=>array($data),
                 "code"=>$code
             ));
         }
