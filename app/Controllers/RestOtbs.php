@@ -34,10 +34,16 @@ class RestOtbs extends ResourceController
 
         $otbModel =new OtbsModel(); 
 
+        $data = array('Name' => $this->request->getPost('Name'));
+
+        if (!array_filter($data)){
+            $data = $this->request->getJSON(true);
+        }
+
         if($this->validate('otbsInsert')){
 
             $id=$otbModel->insert([
-                'Name'=>$this->request->getPost('Name')
+                'Name'=>$data['Name']
             ]);
 
             return $this-> genericResponse($this->model->find($id),null,200);
@@ -52,10 +58,14 @@ class RestOtbs extends ResourceController
 
         $data=$this->request->getRawInput();
         $otb=$this->model->find($id);
-
+        
         if (!$otb)
         {
             return $this->genericResponse(null,"la otb no existe",500);
+        }
+
+        if (!$data){
+            $data = $this->request->getJSON(true);
         }
 
         if(isset($data['Name'])) {
@@ -78,9 +88,9 @@ class RestOtbs extends ResourceController
             return $this->genericResponse(null,"la otb no existe",500); 
         }
         
-        if  ($otb['state'] == 1){
+        if  ($otb['State'] == 1){
             $this->model->update($id,[
-                'state'=>0
+                'State'=>0
             ]);
         }
 

@@ -32,10 +32,18 @@ class RestAlarms extends ResourceController
 
     public function create(){
  
+
+        $data = array('Name' => $this->request->getPost('Name'),
+                        'Otb_ID' => $this->request->getPost('Otb_ID'));
+
+        if (!array_filter($data)){
+            $data = $this->request->getJSON(true);
+        }
+
         if($this->validate('alarmsInsert')){
             $id=$this->model->insert([
-                'Name'=>$this->request->getPost('Name'),
-                'Otb_ID'=>$this->request->getPost('Otb_ID')
+                'Name'=>$data['Name'],
+                'Otb_ID'=>$data['Otb_ID']
             ]);
             return $this-> genericResponse($this->model->find($id),null,200);
         }
@@ -54,6 +62,10 @@ class RestAlarms extends ResourceController
         if (!$user) //Si el id no existe devolvera un error
         {
             return $this->genericResponse(null,"el usuario no existe",500);
+        }
+
+        if(!$data){
+            $data = $this->request->getJSON(true);
         }
         
 
@@ -76,9 +88,9 @@ class RestAlarms extends ResourceController
             return $this->genericResponse(null,"La alarma no existe",500);
         }
 
-        if  ($alarm['state'] == 1){
+        if  ($alarm['State'] == 1){
             $this->model->update($id,[
-                'state'=>0
+                'State'=>0
             ]);
         }
 
