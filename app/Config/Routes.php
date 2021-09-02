@@ -36,11 +36,11 @@ $routes->get('/', 'Home::index');
 
 $routes->resource('restAlertType',['controller'=>'RestAlertType']);
 $routes->resource('restAlert',['controller'=>'RestAlerts']);
-$routes->resource('restUser',['controller'=>'RestUsers']);
 $routes->resource('restOtb',['controller'=>'RestOtbs']);
 $routes->resource('restAlarm',['controller'=>'RestAlarms']);
 $routes->post("restUser/login","RestUsers::login");
-
+$routes->resource('restUser', ['placeholder' => '(:num)', 'controller'=>'RestUsers']);
+$routes->get('restUser/byotb/(:num)', 'RestUsers::listusersbyotb/$1', );
 /*
  * --------------------------------------------------------------------
  * Additional Routing

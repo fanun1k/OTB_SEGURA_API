@@ -31,6 +31,32 @@ class RestUsers extends ResourceController
         return $this->genericResponse($user,"",200);
     }
 
+    public function listusersbyotb($id){
+        
+        if ($id == null){
+            return $this->genericResponse(null,"El ID no fue encontrado",500);
+        }
+
+        $otb = $this->model->find($id);
+
+        if(!$otb){
+            return $this->genericResponse(null,"la otb no existe",500);
+        }
+        /*
+        $otbID = $this->request->getPost('Otb_ID');
+        
+        $Jsondata=$this->request->getJSON(true);
+
+        if  (!$Jsondata){
+            $otbID = $Jsondata['Otb_ID'];
+        }*/
+        //$UsersData = $this->model->findAll();
+        $UsersData = $this->model->where('Otb_ID', $otb['Otb_ID'])->findAll();
+        
+
+        return $this->genericResponse($UsersData,"",200);
+    }
+
     public function create(){
         
         $otbModel=new OtbsModel();
@@ -46,6 +72,10 @@ class RestUsers extends ResourceController
 
         if(!$idOtb){
             return $this-> genericResponse(null,'El ID no pertenece a una OTB existente',500);
+        }
+
+        if(!array_filter($data)){
+            $data = $this->request->getJSON(true);
         }
 
         if($this->validate('usersInsert')){
@@ -71,15 +101,14 @@ class RestUsers extends ResourceController
         $data=$this->request->getRawInput();
         $user=$this->model->find($id);
         
-
         if (!$user)//si el id no existe devolvera un error
         {
             return $this->genericResponse(null,"el usuario no existe",500);
         }
         
-
-        if (!$data){
-            $data = $this->request->getJSON(true);
+        $data2 = $this->request->getJSON(true);
+        if ($data2){
+            $data = $data2;
         }
 
         if (isset($data['Name'])){
@@ -94,9 +123,9 @@ class RestUsers extends ResourceController
             ]);
         }
 
-        if (isset($data['Phone'])){
+        if (isset($data['Cell_phone'])){
             $this->model->update($id,[
-                'Cell_phone'=>$data['Phone']
+                'Cell_phone'=>$data['Cell_phone']
             ]);
         }
 
