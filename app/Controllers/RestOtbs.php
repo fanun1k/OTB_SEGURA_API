@@ -64,8 +64,9 @@ class RestOtbs extends ResourceController
             return $this->genericResponse(null,"la otb no existe",500);
         }
 
-        if (!$data){
-            $data = $this->request->getJSON(true);
+        $data2 = $this->request->getJSON(true);
+        if ($data2){
+            $data = $data2;
         }
 
         if(isset($data['Name'])) {

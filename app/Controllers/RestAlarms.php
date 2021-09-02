@@ -64,10 +64,11 @@ class RestAlarms extends ResourceController
             return $this->genericResponse(null,"el usuario no existe",500);
         }
 
-        if(!$data){
-            $data = $this->request->getJSON(true);
+        $data2 = $this->request->getJSON(true);
+
+        if($data2){
+            $data = $data2;
         }
-        
 
         if(isset($data['Name'])){
             $this->model->update($id,[
