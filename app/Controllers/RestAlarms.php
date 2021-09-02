@@ -103,7 +103,7 @@ class RestAlarms extends ResourceController
         if($code==200)
         {
             return $this->respond(array(
-                "Data"=>$data,
+                "Data"=>array($data),
                 "Code"=>$code
             ));
         }
