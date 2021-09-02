@@ -21,7 +21,7 @@ SET time_zone = "+00:00";
 --
 -- Base de datos: `id17508938_otb_segura`
 --
-
+USE otb_segura_db
 -- --------------------------------------------------------
 
 --
