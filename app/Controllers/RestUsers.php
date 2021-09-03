@@ -33,11 +33,12 @@ class RestUsers extends ResourceController
 
     public function listusersbyotb($id){
         
+        $otbModel=new OtbsModel();
         if ($id == null){
             return $this->genericResponse(null,"El ID no fue encontrado",500);
         }
 
-        $otb = $this->model->find($id);
+        $otb = $otbModel->find($id);
 
         if(!$otb){
             return $this->genericResponse(null,"la otb no existe",500);
