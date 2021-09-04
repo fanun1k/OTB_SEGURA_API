@@ -1,6 +1,7 @@
 <?php namespace App\Controllers;
 
 use App\Models\AlarmsModel;
+use App\Models\OtbsModel;
 use CodeIgniter\RESTful\ResourceController;
 
 class RestAlarms extends ResourceController
@@ -31,13 +32,18 @@ class RestAlarms extends ResourceController
     }
 
     public function create(){
- 
-
+        
+        $otbModel = new OtbsModel();
         $data = array('Name' => $this->request->getPost('Name'),
                         'Otb_ID' => $this->request->getPost('Otb_ID'));
 
         if (!array_filter($data)){
             $data = $this->request->getJSON(true);
+        }
+        
+        $idOtb=$otbModel->find($data['Otb_ID']);
+        if(!$idOtb){
+            return $this-> genericResponse(null,'El ID no pertenece a una OTB existente',500);
         }
 
         if($this->validate('alarmsInsert')){

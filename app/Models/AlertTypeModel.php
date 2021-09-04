@@ -6,7 +6,7 @@ class AlertTypeModel extends Model
 {
     protected $table='alert_type';
     protected $primaryKey= 'Alert_type_ID';
-    protected $allowedFields= ['Name','Atate','Otb_ID'];
+    protected $allowedFields= ['Name','State','Otb_ID'];
 
     public function get($id = null)
     {

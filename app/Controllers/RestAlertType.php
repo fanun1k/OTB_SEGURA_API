@@ -33,15 +33,26 @@ class RestAlertType extends ResourceController
 
     public function create(){ 
 
-        $obt_Model=new OtbsModel();
+        $otbModel=new OtbsModel();
 
-        if($this->validate('alerts')){ 
-            if(!$obt_Model->find($this->request->getPost('Otb_ID'))){
-                return $this-> genericResponse(null,'el ID de otb no existe',500);
-            }
+        $data = array('Name' => $this->request->getPost('Name'),
+                       'Otb_ID' => $this->request->getPost('Otb_ID'));
+
+        if(!array_filter($data)){
+            $data = $this->request->getJSON(true);
+        }
+
+        $idOtb=$otbModel->find($data['Otb_ID']);
+        
+        if(!$idOtb){
+            return $this-> genericResponse(null,'El ID no pertenece a una OTB existente',500);
+        }
+
+        if($this->validate('alertsTypeInsert')){
+
             $id=$this->model->insert([
-                'Name'=>$this->request->getPost('Name'),
-                'Otb_ID'=>$this->request->getPost('Otb_ID'),
+                'Name'=>$data['Name'],
+                'Otb_ID'=>$data['Otb_ID'],
             ]);
             return $this-> genericResponse($this->model->find($id),null,200);
         }

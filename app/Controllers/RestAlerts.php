@@ -2,6 +2,8 @@
 
 use App\Models\AlertsModel;
 use App\Models\AlertTypeModel;
+use App\Models\OtbsModel;
+use App\Models\UsersModel;
 use CodeIgniter\RESTful\ResourceController;
 
 class RestAlerts extends ResourceController
@@ -33,15 +35,42 @@ class RestAlerts extends ResourceController
 
     public function create(){
 
-        $alertModel=new AlertsModel();
+        $alertTypeModel= new AlertTypeModel();
+        $otbModel = new OtbsModel();
+        $userModel = new UsersModel();
 
+        $data = array('Longitude' => $this->request->getPost('Longitude'),
+                        'Latitude'=> $this->request->getPost('Latitude'),
+                        'Otb_ID' => $this->request->getPost('Otb_ID'),
+                        'Alert_type_ID'=>$this->request->getPost('Alert_type_ID'),
+                        'User_ID'=>$this->request->getPost('User_ID'));
+
+        if(!array_filter($data)){
+            $data = $this->request->getJSON(true);
+        }
         
-        if($this->validate('activitysInsert')){
-            $id=$alertModel->insert([
-                'Longitude'=>$this->request->getPost('Longitude'),
-                'Latitude'=>$this->request->getPost('Latitude'),
-                'Alert_type_ID'=>$this->request->getPost('AlertID'),
-                'User_ID'=>$this->request->getPost('UserID')
+        $idOtb = $otbModel->find($data['Otb_ID']);
+        $idUser = $userModel->find($data['User_ID']);
+        $idTypeAlert = $alertTypeModel->find($data['Alert_type_ID']);
+
+        if(!$idOtb){
+            return $this-> genericResponse(null,'El ID no pertenece a una OTB existente',500);
+        }
+        if(!$idUser){
+            return $this-> genericResponse(null,'El ID no pertenece a un Usuario existente',500);
+        }
+        if (!$idTypeAlert){
+            return $this-> genericResponse(null,'El ID no pertenece a un tipo de alerta existente',500);
+        }
+
+        if($this->validate('alertsInsert')){
+
+            $id=$this->model->insert([
+                'Longitude'=>$data['Longitude'],
+                'Latitude'=>$data['Latitude'],
+                'Otb_ID' => $data['Otb_ID'],
+                'Alert_type_ID'=>$data['Alert_type_ID'],
+                'User_ID'=>$data['User_ID']
             ]);
             return $this-> genericResponse($this->model->find($id),null,200);
         }
@@ -60,16 +89,25 @@ class RestAlerts extends ResourceController
             return $this->genericResponse(null,"la alerta no existe",500);
         }
 
-        if($this->validate('alerts')){
-            $this->model->update($id,[
-                'Name'=>$data['Name']            
-            ]);
+        $data2 = $this->request->getJSON(true);
+        if  ($data2){
+            $data = $data2;
+        }
 
-            return $this-> genericResponse($this->model->find($id),null,200);
+        if (isset($data['Longitude'])){
+            $this->model->update($id,[
+                'Longitude'=>$data['Longitude']            
+            ]);
         }
         
-        $validation= \Config\Services::validation();
-        return $this->genericResponse(null,$validation->getErrors(),500);      
+        if (isset($data['Latitude'])){
+            $this->model->update($id,[
+                'Latitude'=>$data['Latitude']            
+            ]);
+        }
+
+        return $this-> genericResponse($this->model->find($id),null,200);
+
     }
 
     public function delete($id=null){
@@ -80,7 +118,13 @@ class RestAlerts extends ResourceController
         {
             return $this->genericResponse(null,"la alerta no existe",500);
         }
-        $this->model->delete($id);
+
+        if ($alert['State'] == 1){
+            $this->model->update($id,[
+                'State'=>0            
+            ]);
+        }
+
         return $this-> genericResponse('La alerta fue eliminada',null,200);    
     }
         

@@ -62,7 +62,7 @@ class RestUsers extends ResourceController
         
         $otbModel=new OtbsModel();
 
-        $idOtb=$otbModel->find($this->request->getPost('otbID'));
+        
         $data = array('Name' => $this->request->getPost('Name'),
                        'Password' => $this->request->getPost('Password'), 
                        'Cell_phone'=>$this->request->getPost('Cell_phone'),
@@ -71,16 +71,17 @@ class RestUsers extends ResourceController
                        'Otb_ID'=>$this->request->getPost('Otb_ID'),
                        'Email'=>$this->request->getPost('Email'));
 
-        if(!$idOtb){
-            return $this-> genericResponse(null,'El ID no pertenece a una OTB existente',500);
-        }
-
         if(!array_filter($data)){
             $data = $this->request->getJSON(true);
         }
 
-        if($this->validate('usersInsert')){
+        $idOtb=$otbModel->find($data['Otb_ID']);
+        if(!$idOtb){
+            return $this-> genericResponse(null,'El ID no pertenece a una OTB existente',500);
+        }
 
+        if($this->validate('usersInsert')){
+            
             $id=$this->model->insert([
                 'Name'=>$data['Name'],
                 'Password'=>$data['Password'],

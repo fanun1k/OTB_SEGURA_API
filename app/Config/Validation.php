@@ -39,9 +39,23 @@ class Validation
 	public $alerts=[
 		'name'=>'required|min_length[3]|max_length[255]'
 	];
+
+	public $alertsInsert=[
+		'Longitude'=>'required|min_length[1]|max_length[255]',
+		'Latitude'=>'required|min_length[1]|max_length[255]',
+		'Otb_ID' => 'required|min_length[1]',
+		'Alert_type_ID'=>'required|min_length[1]',
+		'User_ID'=>'required|min_length[1]'
+	];
+	
 	public $alertsUpdate=[
 		'name'=>'min_length[0]|max_length[255]',
 		'state'=>'min_length[1]|max_length[1]'
+	];
+
+	public $alertsTypeInsert=[
+		'Name' => 'required|min_length[1]|max_length[60]',
+		'Otb_ID' => 'required|min_length[1]'
 	];
 
 	public $usersInsert=[
@@ -66,13 +80,6 @@ class Validation
 	];
 	public $otbsUpdate=[
 		'name'=>'min_length[5]|max_length[100]'
-	];
-	
-	public $activitysInsert=[
-		'longitude'=>'required|min_length[1]|max_length[255]',
-		'latitude'=>'required|min_length[1]|max_length[255]',
-		'alertID'=>'required|min_length[1]|max_length[255]',
-		'userID'=>'required|min_length[1]|max_length[255]'
 	];
 
 	public $alarmsInsert=[
