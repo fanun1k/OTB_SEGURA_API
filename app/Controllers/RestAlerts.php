@@ -13,7 +13,7 @@ class RestAlerts extends ResourceController
     
     public function index()
     {
-        return $this->genericResponse($this->model->findAll(),"",200);
+        return $this->genericResponse($this->model->where('State', 1)->findAll(),"",200);
     }
 
     public function show($id = null)
@@ -23,14 +23,18 @@ class RestAlerts extends ResourceController
             return $this->genericResponse(null,"El ID no fue encontrado",500);
         }
 
-        $alert=$this->model->find($id);
+        $alert=$this->model->where('Alert_ID', $id)->findAll();
+
+        if($alert && $alert[0]['State'] == 0){
+            return $this->genericResponse(null,"La alerta esta inhabilitado", 401);
+        }
 
         if (!$alert)
         {
             return $this->genericResponse(null,"La alerta no existe",500);
         }
 
-        return $this->genericResponse(array($alert),"",200);
+        return $this->genericResponse($alert,"",200);
     }
 
     public function create(){
@@ -72,7 +76,7 @@ class RestAlerts extends ResourceController
                 'Alert_type_ID'=>$data['Alert_type_ID'],
                 'User_ID'=>$data['User_ID']
             ]);
-            return $this-> genericResponse($this->model->find($id),null,200);
+            return $this-> genericResponse(null,"Alerta Creada",200);
         }
 
         $validation= \Config\Services::validation();
@@ -133,11 +137,19 @@ class RestAlerts extends ResourceController
         if($code==200)
         {
             return $this->respond(array(
-                "Data"=>array($data),
+                "Data"=>$data,
+                "Msj"=>$msj,
                 "Code"=>$code
             ));
         }
         if($code==500)
+        {
+            return $this->respond(array(
+                "Msj"=>$msj,
+                "Code"=>$code
+            ));
+        }
+        if($code==401)
         {
             return $this->respond(array(
                 "Msj"=>$msj,

@@ -11,7 +11,7 @@ class RestUsers extends ResourceController
     
     public function index()
     {
-        return $this->genericResponse($this->model->findAll(),"",200);
+        return $this->genericResponse($this->model->where('State', 1)->findAll(),"",200);
     }
 
     public function show($id = null)
@@ -21,10 +21,15 @@ class RestUsers extends ResourceController
             return $this->genericResponse(null,"El ID no fue encontrado",500);
         }
         
-        $user=$this->model->find($id);
+        $user=$this->model->where('User_ID', $id)->findAll();
+        
+        if($user && $user[0]['State'] == 0){
+            return $this->genericResponse(null,"El usuario esta inhabilitado", 401);
+        }
+
         if (!$user)
         {
-            return $this->genericResponse(null,"el usuario no existe",500);
+            return $this->genericResponse(null,"El usuario no existe",500);
         }
 
         return $this->genericResponse($user,"",200);
@@ -42,17 +47,9 @@ class RestUsers extends ResourceController
         if(!$otb){
             return $this->genericResponse(null,"la otb no existe",500);
         }
-        /*
-        $otbID = $this->request->getPost('Otb_ID');
-        
-        $Jsondata=$this->request->getJSON(true);
 
-        if  (!$Jsondata){
-            $otbID = $Jsondata['Otb_ID'];
-        }*/
-        //$UsersData = $this->model->findAll();
-        $UsersData = $this->model->where('Otb_ID', $otb['Otb_ID'])->findAll();
-        
+        $UsersData = $this->model->where('Otb_ID', $otb['Otb_ID']);
+        $UsersData = $UsersData->where('State', 1)->findAll();
 
         return $this->genericResponse($UsersData,"",200);
     }
@@ -90,7 +87,8 @@ class RestUsers extends ResourceController
                 'Otb_ID'=>$data['Otb_ID'],
                 'Email'=>$data['Email']
             ]);
-            return $this-> genericResponse($this->model->find($id),null,200);
+
+            return $this-> genericResponse(null,"Usuario creado",200);
         }
 
         $validation= \Config\Services::validation();
@@ -199,10 +197,11 @@ class RestUsers extends ResourceController
     {
         if($code==200)
         {
-            if(!is_array($data))
-                $data = array($data);
+            /*return json_encode(array('data'=>$data,
+                                'code'=>$code));*/
             return $this->respond(array(
                 "Data"=>$data,
+                "Msg" => $msj,
                 "Code"=>$code
             ));
         }

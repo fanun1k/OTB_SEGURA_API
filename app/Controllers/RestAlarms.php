@@ -11,7 +11,7 @@ class RestAlarms extends ResourceController
     
     public function index()
     {
-        return $this->genericResponse($this->model->findAll(),"",200);
+        return $this->genericResponse($this->model->where('State', 1)->findAll(),"",200);
     }
 
     public function show($id = null)
@@ -21,14 +21,18 @@ class RestAlarms extends ResourceController
             return $this->genericResponse(null,"El ID no fue encontrado",500);
         }
 
-        $alarm=$this->model->find($id);
+        $alarm=$this->model->where('Alarm_ID', $id)->findAll();
+
+        if($alarm && $alarm[0]['State'] == 0){
+            return $this->genericResponse(null,"La alarma esta inhabilitado", 401);
+        }
 
         if (!$alarm)
         {
             return $this->genericResponse(null,"La alarma no existe",500);
         }
 
-        return $this->genericResponse(array($alarm),"",200);
+        return $this->genericResponse($alarm,"",200);
     }
 
     public function create(){
@@ -51,7 +55,7 @@ class RestAlarms extends ResourceController
                 'Name'=>$data['Name'],
                 'Otb_ID'=>$data['Otb_ID']
             ]);
-            return $this-> genericResponse($this->model->find($id),null,200);
+            return $this-> genericResponse(null,"Alarma creada",200);
         }
 
         $validation= \Config\Services::validation();
@@ -110,10 +114,18 @@ class RestAlarms extends ResourceController
         {
             return $this->respond(array(
                 "Data"=>$data,
+                "Msj"=>$msj,
                 "Code"=>$code
             ));
         }
         if($code==500)
+        {
+            return $this->respond(array(
+                "Msj"=>$msj,
+                "Code"=>$code
+            ));
+        }
+        if($code==401)
         {
             return $this->respond(array(
                 "Msj"=>$msj,

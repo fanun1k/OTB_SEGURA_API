@@ -10,7 +10,7 @@ class RestOtbs extends ResourceController
     
     public function index()
     {
-        return $this->genericResponse($this->model->findAll(),"",200); 
+        return $this->genericResponse($this->model->where('State', 1)->findAll(),"",200);
     }
 
     public function show($id = null) 
@@ -20,14 +20,18 @@ class RestOtbs extends ResourceController
             return $this->genericResponse(null,"El ID de la otb no fue encontrado",500); 
         }
 
-        $otb=$this->model->find($id); 
+        $otb=$this->model->where('Otb_ID', $id)->findAll();
 
-        if (!$otb) 
-        {
-            return $this->genericResponse(null,"la otb no esta registrada",500); 
+        if($otb && $otb[0]['State'] == 0){
+            return $this->genericResponse(null,"La Otb esta inhabilitada", 401);
         }
 
-        return $this->genericResponse(array($otb),"",200); 
+        if (!$otb)
+        {
+            return $this->genericResponse(null,"La otb no esta registrada",500); 
+        }
+
+        return $this->genericResponse($otb,"",200); 
     }
 
     public function create(){ 
@@ -46,9 +50,9 @@ class RestOtbs extends ResourceController
                 'Name'=>$data['Name']
             ]);
 
-            return $this-> genericResponse($this->model->find($id),null,200);
-
+            return $this-> genericResponse(null,"Otb creado",200);
         }
+
         $validation= \Config\Services::validation();
         return $this->genericResponse(null,$validation->getErrors(),500);
         
@@ -104,10 +108,18 @@ class RestOtbs extends ResourceController
         {
             return $this->respond(array(
                 "Data"=>$data,
+                "Msj"=>$msj,
                 "Code"=>$code
             ));
         }
         if($code==500)
+        {
+            return $this->respond(array(
+                "Msj"=>$msj,
+                "Code"=>$code
+            ));
+        }
+        if($code==401)
         {
             return $this->respond(array(
                 "Msj"=>$msj,

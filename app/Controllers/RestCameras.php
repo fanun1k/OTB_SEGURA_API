@@ -11,7 +11,7 @@ class RestCameras extends ResourceController
     
     public function index()
     {
-        return $this->genericResponse($this->model->findAll(),"",200); 
+        return $this->genericResponse($this->model->where('State', 1)->findAll(),"",200);
     }
 
     public function show($id = null) 
@@ -21,14 +21,18 @@ class RestCameras extends ResourceController
             return $this->genericResponse(null,"El ID no fue encontrado",500); 
         }
 
-        $alertType=$this->model->find($id);
+        $camera=$this->model->where('Camera_ID', $id)->findAll();
 
-        if (!$alertType) 
+        if($camera && $camera[0]['State'] == 0){
+            return $this->genericResponse(null,"La camara esta inhabilitado", 401);
+        }
+
+        if (!$camera) 
         {
             return $this->genericResponse(null,"La camara no existe",500); 
         }
 
-        return $this->genericResponse(array($alertType),"",200); 
+        return $this->genericResponse($camera,"",200); 
     }
 
     public function create(){
@@ -54,7 +58,7 @@ class RestCameras extends ResourceController
                 'Name'=>$data['Name'],
                 'Otb_ID'=>$data['Otb_ID'],
             ]);
-            return $this-> genericResponse($this->model->find($id),null,200);
+            return $this-> genericResponse(null,"Camara creada",200);
         }
 
         $validation= \Config\Services::validation();
@@ -110,10 +114,18 @@ class RestCameras extends ResourceController
         {
             return $this->respond(array(
                 "Data"=>$data,
+                "Msj"=>$msj,
                 "Code"=>$code
             ));
         }
         if($code==500)
+        {
+            return $this->respond(array(
+                "Msj"=>$msj,
+                "Code"=>$code
+            ));
+        }
+        if($code==401)
         {
             return $this->respond(array(
                 "Msj"=>$msj,
