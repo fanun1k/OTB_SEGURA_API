@@ -1,6 +1,7 @@
 <?php namespace App\Controllers;
 
 use App\Models\AlarmsModel;
+use App\Models\OtbsModel;
 use CodeIgniter\RESTful\ResourceController;
 
 class RestAlarms extends ResourceController
@@ -10,7 +11,7 @@ class RestAlarms extends ResourceController
     
     public function index()
     {
-        return $this->genericResponse($this->model->findAll(),"",200);
+        return $this->genericResponse($this->model->where('State', 1)->findAll(),"",200);
     }
 
     public function show($id = null)
@@ -20,7 +21,11 @@ class RestAlarms extends ResourceController
             return $this->genericResponse(null,"El ID no fue encontrado",500);
         }
 
-        $alarm=$this->model->find($id);
+        $alarm=$this->model->where('Alarm_ID', $id)->findAll();
+
+        if($alarm && $alarm[0]['State'] == 0){
+            return $this->genericResponse(null,"La alarma esta inhabilitado", 401);
+        }
 
         if (!$alarm)
         {
@@ -31,13 +36,18 @@ class RestAlarms extends ResourceController
     }
 
     public function create(){
- 
-
+        
+        $otbModel = new OtbsModel();
         $data = array('Name' => $this->request->getPost('Name'),
                         'Otb_ID' => $this->request->getPost('Otb_ID'));
 
         if (!array_filter($data)){
             $data = $this->request->getJSON(true);
+        }
+        
+        $idOtb=$otbModel->find($data['Otb_ID']);
+        if(!$idOtb){
+            return $this-> genericResponse(null,'El ID no pertenece a una OTB existente',500);
         }
 
         if($this->validate('alarmsInsert')){
@@ -45,7 +55,7 @@ class RestAlarms extends ResourceController
                 'Name'=>$data['Name'],
                 'Otb_ID'=>$data['Otb_ID']
             ]);
-            return $this-> genericResponse($this->model->find($id),null,200);
+            return $this-> genericResponse(null,"Alarma creada",200);
         }
 
         $validation= \Config\Services::validation();
@@ -103,11 +113,19 @@ class RestAlarms extends ResourceController
         if($code==200)
         {
             return $this->respond(array(
-                "Data"=>array($data),
+                "Data"=>$data,
+                "Msj"=>$msj,
                 "Code"=>$code
             ));
         }
         if($code==500)
+        {
+            return $this->respond(array(
+                "Msj"=>$msj,
+                "Code"=>$code
+            ));
+        }
+        if($code==401)
         {
             return $this->respond(array(
                 "Msj"=>$msj,

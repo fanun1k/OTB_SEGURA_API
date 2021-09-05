@@ -2,10 +2,10 @@
 
 use CodeIgniter\Model;
 
-class AlertTypeModel extends Model
+class CamerasModel extends Model
 {
-    protected $table='alert_type';
-    protected $primaryKey= 'Alert_type_ID';
+    protected $table='camera';
+    protected $primaryKey= 'Camera_ID';
     protected $allowedFields= ['Name','State','Otb_ID'];
 
     public function get($id = null)
@@ -14,7 +14,7 @@ class AlertTypeModel extends Model
             return $this->findAll();
         }
         return $this->asArray()
-            ->where(['Alert_type_ID'=>$id])
+            ->where(['Camera_ID'=>$id])
             ->first();
     }
 }
