@@ -28,7 +28,7 @@ class RestAlarms extends ResourceController
             return $this->genericResponse(null,"La alarma no existe",500);
         }
 
-        return $this->genericResponse($alarm,"",200);
+        return $this->genericResponse(array($alarm),"",200);
     }
 
     public function create(){
@@ -109,7 +109,7 @@ class RestAlarms extends ResourceController
         if($code==200)
         {
             return $this->respond(array(
-                "Data"=>array($data),
+                "Data"=>$data,
                 "Code"=>$code
             ));
         }

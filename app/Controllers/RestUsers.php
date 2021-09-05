@@ -20,9 +20,8 @@ class RestUsers extends ResourceController
         {
             return $this->genericResponse(null,"El ID no fue encontrado",500);
         }
-
+        
         $user=$this->model->find($id);
-
         if (!$user)
         {
             return $this->genericResponse(null,"el usuario no existe",500);
@@ -200,23 +199,25 @@ class RestUsers extends ResourceController
     {
         if($code==200)
         {
+            if(!is_array($data))
+                $data = array($data);
             return $this->respond(array(
-                "data"=>array($data),
-                "code"=>$code
+                "Data"=>$data,
+                "Code"=>$code
             ));
         }
         if($code==500)
         {
             return $this->respond(array(
-                "msj"=>$msj,
-                "code"=>$code
+                "Msj"=>$msj,
+                "Code"=>$code
             ));
         }
         if($code==401)
         {
             return $this->respond(array(
-                "msj"=>$msj,
-                "code"=>$code
+                "Msj"=>$msj,
+                "Code"=>$code
             ));
         }
     }

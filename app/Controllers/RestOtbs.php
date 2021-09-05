@@ -27,7 +27,7 @@ class RestOtbs extends ResourceController
             return $this->genericResponse(null,"la otb no esta registrada",500); 
         }
 
-        return $this->genericResponse($otb,"",200); 
+        return $this->genericResponse(array($otb),"",200); 
     }
 
     public function create(){ 
@@ -103,7 +103,7 @@ class RestOtbs extends ResourceController
         if($code==200)
         {
             return $this->respond(array(
-                "Data"=>array($data),
+                "Data"=>$data,
                 "Code"=>$code
             ));
         }

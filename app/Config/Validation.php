@@ -90,6 +90,11 @@ class Validation
 	public $alarmsUpdate=[
 		'name'=>'min_length[4]|max_length[100]'
 	];
+
+	public $camerasInsert=[
+		'Name' => 'required|min_length[1]|max_length[100]',
+		'Otb_ID' => 'required|min_length[1]'
+	];
 	
 	//--------------------------------------------------------------------
 	

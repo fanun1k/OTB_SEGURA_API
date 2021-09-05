@@ -1,12 +1,12 @@
 <?php namespace App\Controllers;
 
-use App\Models\AlertTypeModel;
+use App\Models\CamerasModel;
 use App\Models\OtbsModel;
 use CodeIgniter\RESTful\ResourceController;
 
-class RestAlertType extends ResourceController
+class RestCameras extends ResourceController
 {
-    protected $modelName = 'App\Models\AlertTypeModel';
+    protected $modelName = 'App\Models\CamerasModel';
     protected $format    = 'json';
     
     public function index()
@@ -25,7 +25,7 @@ class RestAlertType extends ResourceController
 
         if (!$alertType) 
         {
-            return $this->genericResponse(null,"La alerta no existe",500); 
+            return $this->genericResponse(null,"La camara no existe",500); 
         }
 
         return $this->genericResponse(array($alertType),"",200); 
@@ -48,7 +48,7 @@ class RestAlertType extends ResourceController
             return $this-> genericResponse(null,'El ID no pertenece a una OTB existente',500);
         }
 
-        if($this->validate('alertsTypeInsert')){
+        if($this->validate('camerasInsert')){
 
             $id=$this->model->insert([
                 'Name'=>$data['Name'],
@@ -65,11 +65,11 @@ class RestAlertType extends ResourceController
     public function update($id=null){
 
         $data=$this->request->getRawInput();
-        $alertType=$this->model->find($id);
+        $camera=$this->model->find($id);
 
-        if (!$alertType)
+        if (!$camera)
         {
-            return $this->genericResponse(null,"El tipo de alerta no existe",500);
+            return $this->genericResponse(null,"La camara no existe",500);
         }
         $data2 = $this->request->getJSON(true);
         if ($data2){
@@ -89,16 +89,16 @@ class RestAlertType extends ResourceController
 
     public function delete($id=null){ 
 
-        $alertType=$this->model->find($id); 
+        $camera=$this->model->find($id); 
 
-        if (!$alertType) 
+        if (!$camera) 
         {
-            return $this->genericResponse(null,"La alerta no existe",500);
+            return $this->genericResponse(null,"la alerta no existe",500);
         }
 
-        if ($alertType['State'] == 1){
+        if ($camera['State'] == 1){
             $this->model->update($id,[
-                'State'=>0 
+                'State'=>0
             ]);
         }
         return $this-> genericResponse('El tipo de alerta fue eliminada',null,200); 

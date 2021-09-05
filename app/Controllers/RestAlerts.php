@@ -27,10 +27,10 @@ class RestAlerts extends ResourceController
 
         if (!$alert)
         {
-            return $this->genericResponse(null,"la alerta no existe",500);
+            return $this->genericResponse(null,"La alerta no existe",500);
         }
 
-        return $this->genericResponse($alert,"",200);
+        return $this->genericResponse(array($alert),"",200);
     }
 
     public function create(){
@@ -86,7 +86,7 @@ class RestAlerts extends ResourceController
 
         if (!$alert)
         {          
-            return $this->genericResponse(null,"la alerta no existe",500);
+            return $this->genericResponse(null,"La alerta no existe",500);
         }
 
         $data2 = $this->request->getJSON(true);
@@ -116,7 +116,7 @@ class RestAlerts extends ResourceController
 
         if (!$alert)
         {
-            return $this->genericResponse(null,"la alerta no existe",500);
+            return $this->genericResponse(null,"La alerta no existe",500);
         }
 
         if ($alert['State'] == 1){
