@@ -56,24 +56,14 @@ class RestUsers extends ResourceController
 
     public function create(){
         
-        $otbModel=new OtbsModel();
-
-        
         $data = array('Name' => $this->request->getPost('Name'),
                        'Password' => $this->request->getPost('Password'), 
                        'Cell_phone'=>$this->request->getPost('Cell_phone'),
                        'Ci'=>$this->request->getPost('Ci'),
-                       'Type'=>$this->request->getPost('Type'),
-                       'Otb_ID'=>$this->request->getPost('Otb_ID'),
                        'Email'=>$this->request->getPost('Email'));
 
         if(!array_filter($data)){
             $data = $this->request->getJSON(true);
-        }
-
-        $idOtb=$otbModel->find($data['Otb_ID']);
-        if(!$idOtb){
-            return $this-> genericResponse(null,'El ID no pertenece a una OTB existente',500);
         }
 
         if($this->validate('usersInsert')){
@@ -83,8 +73,6 @@ class RestUsers extends ResourceController
                 'Password'=>$data['Password'],
                 'Cell_phone'=>$data['Cell_phone'],
                 'Ci'=>$data['Ci'],
-                'Type'=>$data['Type'],
-                'Otb_ID'=>$data['Otb_ID'],
                 'Email'=>$data['Email']
             ]);
 
@@ -172,16 +160,15 @@ class RestUsers extends ResourceController
             $email=$Jsondata['Email'];
             $password=$Jsondata['Password'];
         }        
-        $Userdata=$this->model->asArray()
+        $Userdata=$this->model
         ->where(['Email'=>$email])
         ->first();
-     print_r($Userdata);
         if($Userdata){
             if($password==$Userdata['Password']){
                 if($Userdata['State']==0){
                     return $this-> genericResponse(null,'Cuenta de usuario inhabilitada',401);
                 }
-                return $this-> genericResponse($Userdata,null,200);
+                return $this-> genericResponse(array($Userdata),null,200);
             }
             else{
                 return $this-> genericResponse(null,'Contraseña incorrecta',401);
@@ -201,7 +188,7 @@ class RestUsers extends ResourceController
                                 'code'=>$code));*/
             return $this->respond(array(
                 "Data"=>$data,
-                "Msg" => $msj,
+                "Msj" => $msj,
                 "Code"=>$code
             ));
         }
