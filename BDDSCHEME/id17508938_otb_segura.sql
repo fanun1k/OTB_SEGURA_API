@@ -98,7 +98,7 @@ DEFAULT CHARACTER SET = utf8;
 -- Table `otb_segura_db`.`alert`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `otb_segura_db`.`alert` (
-  `Alert_ID` INT(11) NOT NULL,
+  `Alert_ID` INT(11) NOT NULL AUTO_INCREMENT,
   `Date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP(),
   `Longitude` FLOAT NOT NULL,
   `Latitude` FLOAT NOT NULL,
