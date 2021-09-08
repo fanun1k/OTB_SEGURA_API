@@ -74,7 +74,8 @@ class Validation
 	];
 
 	public $otbsInsert=[
-		'Name'=>'required|min_length[5]|max_length[100]' 
+		'Name'=>'required|min_length[5]|max_length[100]',
+		'User_ID'=>'required|min_length[1]|integer' 
 	];
 	public $otbsUpdate=[
 		'name'=>'min_length[5]|max_length[100]'
