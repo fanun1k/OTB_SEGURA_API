@@ -69,10 +69,9 @@ class Validation
 	];
 
 	public $usersUpdate=[
-		'name'=>'min_length[3]|max_length[100]',
-		'password'=>'min_length[5]|max_length[35]',
-		'phone' => 'exact_length[60]',
-		'type' => 'exact_length[1]'
+		'Name'=>'required|min_length[3]|max_length[100]',
+		'Password'=>'required|min_length[5]|max_length[35]',
+		'Cell_phone' => 'required|exact_length[8]'
 	];
 
 	public $otbsInsert=[
