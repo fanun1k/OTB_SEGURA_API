@@ -1,6 +1,7 @@
 <?php namespace App\Controllers;
 
 use App\Models\OtbsModel;
+use App\Models\UsersModel;
 use CodeIgniter\RESTful\ResourceController;
 
 class RestOtbs extends ResourceController
@@ -37,20 +38,29 @@ class RestOtbs extends ResourceController
     public function create(){ 
 
         $otbModel =new OtbsModel(); 
+        $userModel=new UsersModel();      
+        $data = array('Name' => $this->request->getPost('Name'),
+                      'User_ID'=>$this->request->getPost('User_ID'));
 
-        $data = array('Name' => $this->request->getPost('Name'));
 
         if (!array_filter($data)){
             $data = $this->request->getJSON(true);
         }
 
         if($this->validate('otbsInsert')){
-
-            $id=$otbModel->insert([
-                'Name'=>$data['Name']
-            ]);
-
-            return $this-> genericResponse(null,"Otb creado",200);
+            $existe=$userModel->find($data["User_ID"]);
+            
+            if(!$existe){ 
+                return $this->genericResponse(null,"ID de usuario no encontrado",404);
+            }
+            $permitted_chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            $res=$otbModel->InsertOtb($data["User_ID"],["Name"=>$data["Name"],"Code"=>substr(str_shuffle($permitted_chars), 0, 8)]);
+           
+            if(!$res){               
+                return $this->genericResponse(null,"Error en la transacción",500);
+                
+            }
+            return $this->genericResponse($res,null,200);
         }
 
         $validation= \Config\Services::validation();
@@ -120,6 +130,13 @@ class RestOtbs extends ResourceController
             ));
         }
         if($code==401)
+        {
+            return $this->respond(array(
+                "Msj"=>$msj,
+                "Code"=>$code
+            ));
+        }
+        if($code==404)
         {
             return $this->respond(array(
                 "Msj"=>$msj,

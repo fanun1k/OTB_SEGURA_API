@@ -64,8 +64,6 @@ class Validation
 		'Password'=>'required|min_length[5]|max_length[60]',
 		'Cell_phone' => 'required|exact_length[8]',
 		'Ci' => 'required|min_length[6]|max_length[15]',
-		'Type' => 'required|exact_length[1]',
-		'Otb_ID' => 'required|min_length[1]'
 	];
 
 	public $usersUpdate=[
@@ -75,7 +73,8 @@ class Validation
 	];
 
 	public $otbsInsert=[
-		'Name'=>'required|min_length[5]|max_length[100]' 
+		'Name'=>'required|min_length[5]|max_length[100]',
+		'User_ID'=>'required|min_length[1]|integer' 
 	];
 	public $otbsUpdate=[
 		'name'=>'min_length[5]|max_length[100]'

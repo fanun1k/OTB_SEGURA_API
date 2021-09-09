@@ -118,6 +118,7 @@ nb-configuration.xml
 .phpintel
 /api/
 
+app/Config/Database.php 
 # Visual Studio Code
 .vscode/
 
