@@ -8,7 +8,7 @@ class OtbsModel extends Model
     protected $table='otb';
     protected $primaryKey= 'Otb_ID';
     //Nombre del id de la tabla
-    protected $allowedFields= ['Name','State']; // las columnas que vamos a afectar
+    protected $allowedFields= ['Name','State','Code']; // las columnas que vamos a afectar
 
     public function get($id = null) 
     {
@@ -19,7 +19,8 @@ class OtbsModel extends Model
             ->where(['Otb_ID'=>$id]) 
             ->first();
     }
-  public function InsertOtb($userId,$data): bool{
+  public function InsertOtb($userId,$data)
+  {
     $userModel=new UsersModel();
       
       $this->db->transStart(); //iniciamos la transaccion 
@@ -30,7 +31,8 @@ class OtbsModel extends Model
       if($this->db->transStatus()===false){ //verificando el estado de la transaccion
         return false;
       }
-      return true;
+      return $this->where('Otb_ID',$otbId)
+      ->findAll();
 
   }
 }
