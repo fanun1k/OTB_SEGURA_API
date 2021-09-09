@@ -86,11 +86,15 @@ class RestUsers extends ResourceController
     public function update($id=null){
 
         $data=$this->request->getRawInput();
-        $user=$this->model->find($id);
+        $user=$this->model->where('User_ID', $id)->findAll();
         
         if (!$user)//si el id no existe devolvera un error
         {
             return $this->genericResponse(null,"el usuario no existe",500);
+        }
+        
+        if($user && $user[0]['State'] == 0){
+            return $this->genericResponse(null,"El usuario esta inhabilitado", 401);
         }
         
         $data2 = $this->request->getJSON(true);
@@ -98,32 +102,19 @@ class RestUsers extends ResourceController
             $data = $data2;
         }
 
-        if (isset($data['Name'])){
-            $this->model->update($id,[
-                'Name'=>$data['Name']          
-            ]);
-        }
+        if ($this->validate('usersUpdate')){
 
-        if (isset($data['Password'])){
-            $this->model->update($id,[
-                'Password'=>$data['Password']
-            ]);
-        }
-
-        if (isset($data['Cell_phone'])){
-            $this->model->update($id,[
+            $userModel = $this->model->update($id,[
+                'Name'=>$data['Name'],
+                'Password'=>$data['Password'],
                 'Cell_phone'=>$data['Cell_phone']
             ]);
+            
+            return $this-> genericResponse(null,"Usuario modificado",200);
         }
-
-        if (isset($data['Type'])){
-            $this->model->update($id,[
-                'Type'=>$data['Type']
-            ]);
-        }
-
-        return $this-> genericResponse($this->model->find($id),null,200);
      
+        $validation= \Config\Services::validation();
+        return $this->genericResponse(null,$validation->getErrors(),500);  
     }
 
     public function delete($id=null){
