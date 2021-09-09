@@ -31,7 +31,8 @@ class OtbsModel extends Model
       if($this->db->transStatus()===false){ //verificando el estado de la transaccion
         return false;
       }
-      return $this->find($otbId);
+      return $this->where('Otb_ID',$otbId)
+      ->findAll();
 
   }
 }
