@@ -52,16 +52,15 @@ class RestOtbs extends ResourceController
             
             if(!$existe){ 
                 return $this->genericResponse(null,"ID de usuario no encontrado",404);
-                print_r("punto");
             }
-  
-            $res=$otbModel->InsertOtb($data["User_ID"],["Name"=>$data["Name"]]);
+            $permitted_chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            $res=$otbModel->InsertOtb($data["User_ID"],["Name"=>$data["Name"],"Code"=>substr(str_shuffle($permitted_chars), 0, 8)]);
            
             if(!$res){               
                 return $this->genericResponse(null,"Error en la transacción",500);
                 
             }
-            return $this->genericResponse(null,"Otb Creada",200);
+            return $this->genericResponse($res,null,200);
         }
 
         $validation= \Config\Services::validation();
