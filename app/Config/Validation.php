@@ -93,7 +93,11 @@ class Validation
 		'Name' => 'required|min_length[1]|max_length[100]',
 		'Otb_ID' => 'required|min_length[1]'
 	];
-	
+	public $joinOtb=[
+		'User_ID'=>'required|integer',
+		'Code'=>'required|alpha_numeric|exact_length[8]'
+
+	];
 	//--------------------------------------------------------------------
 	
 	// Rules

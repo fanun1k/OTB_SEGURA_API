@@ -93,18 +93,41 @@ class RestOtbs extends ResourceController
         
      
     }
-    public function joinOtb($code){
-              
-        $otb=$this->model->where('Code', $code)->findAll();
-       
-        if (!$otb)
-        {
-            return $this->genericResponse(null,"El Código no pertenece a ninguna OTB activa",404); 
-        }
+    public function joinOtb(){
 
-        if($otb && $otb[0]['State'] == 1){
-            return $this->genericResponse($otb,null, 200);
+        $userModel=new UsersModel();
+
+        $data=array(
+            'User_ID'=>$this->request->getPost('User_ID'),
+            'Code'=>$this->request->getPost('Code')
+        );   
+
+        if(!array_filter($data)){
+            $data = $this->request->getJSON(true);
         }
+        if($this->validate('joinOtb')){
+            $otb=$this->model->where('Code', $data['Code'])->findAll();
+
+            if (!$otb)
+            {
+                return $this->genericResponse(null,"El Código no pertenece a ninguna OTB activa",404); 
+            }
+            
+            if($otb && $otb[0]['State'] == 1){
+                
+                $user=$userModel->find($data['User_ID']);
+                
+                if(!$user){
+                   
+                    return $this->genericResponse(null,"No se encontro al usuario",404);  
+                }
+                $userModel->update($data['User_ID'],['Otb_ID'=>$otb[0]['Otb_ID']]);
+                
+                return $this->genericResponse($otb,null, 200);
+            }
+        }
+        $validation= \Config\Services::validation();
+        return $this->genericResponse(null,$validation->getErrors(),500);   
     }
 
     public function delete($id=null){ 
