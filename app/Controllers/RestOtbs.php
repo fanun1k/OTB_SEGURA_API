@@ -93,6 +93,19 @@ class RestOtbs extends ResourceController
         
      
     }
+    public function joinOtb($code){
+              
+        $otb=$this->model->where('Code', $code)->findAll();
+       
+        if (!$otb)
+        {
+            return $this->genericResponse(null,"El Código no pertenece a ninguna OTB activa",404); 
+        }
+
+        if($otb && $otb[0]['State'] == 1){
+            return $this->genericResponse($otb,null, 200);
+        }
+    }
 
     public function delete($id=null){ 
 
