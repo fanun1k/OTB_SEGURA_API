@@ -3,6 +3,7 @@
 use App\Models\OtbsModel;
 use App\Models\UsersModel;
 use CodeIgniter\RESTful\ResourceController;
+use Firebase\JWT\JWT;
 
 class RestOtbs extends ResourceController
 {

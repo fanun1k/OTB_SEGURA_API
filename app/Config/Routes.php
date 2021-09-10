@@ -42,6 +42,11 @@ $routes->resource('restCamera',['controller' => 'RestCameras']);
 $routes->post("restUser/login","RestUsers::login");
 $routes->resource('restUser', ['placeholder' => '(:num)', 'controller'=>'RestUsers']);
 $routes->get('restUser/byotb/(:num)', 'RestUsers::listusersbyotb/$1', );
+
+//Routas de JWT
+$routes->resource('api/auth', ['controller' => 'Auth']);
+$routes->resource('api/user', ['controller' => 'User']);
+
 /*
  * --------------------------------------------------------------------
  * Additional Routing
