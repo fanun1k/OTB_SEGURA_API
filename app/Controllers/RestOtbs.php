@@ -38,8 +38,8 @@ class RestOtbs extends Auth
 
     public function create(){ 
 
-        $token = $this->request->getHeader('Authorization')->getValue();
-        $otbModel =new OtbsModel(); 
+        $token = ($this->request->getHeader('Authorization')!=null)?$this->request->getHeader('Authorization')->getValue():"";
+        $otbModel =new OtbsModel();
         $userModel=new UsersModel();      
         $data = array('Name' => $this->request->getPost('Name'),
                       'User_ID'=>$this->request->getPost('User_ID'));
@@ -51,26 +51,24 @@ class RestOtbs extends Auth
 
         if($this->validate('otbsInsert')){
             if($this->validateToken($token)){
-                return $this->genericResponse(null,"Creado",200);
+                $existe=$userModel->find($data["User_ID"]);
+            
+                if(!$existe){ 
+                    return $this->genericResponse(null,"ID de usuario no encontrado",404);
+                }
+                $permitted_chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+                $res=$otbModel->InsertOtb($data["User_ID"],["Name"=>$data["Name"],"Code"=>substr(str_shuffle($permitted_chars), 0, 8)]);
+            
+                if(!$res){               
+                    return $this->genericResponse(null,"Error en la transacción",500);
+                    
+                }
+
+                return $this->genericResponse('Otb Creada',null,200);
+
             }else{
                 return $this->genericResponse(null,"Token Invalido",401);
             }
-            /*$existe=$userModel->find($data["User_ID"]);
-            
-            if(!$existe){ 
-                return $this->genericResponse(null,"ID de usuario no encontrado",404);
-            }
-            $permitted_chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-            $res=$otbModel->InsertOtb($data["User_ID"],["Name"=>$data["Name"],"Code"=>substr(str_shuffle($permitted_chars), 0, 8)]);
-           
-            if(!$res){               
-                return $this->genericResponse(null,"Error en la transacción",500);
-                
-            }*/
-
-            //JWT
-            
-            return $this->genericResponse(['token' => $jwt],null,200);
         }
 
         $validation= \Config\Services::validation();
