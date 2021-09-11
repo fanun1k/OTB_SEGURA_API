@@ -5,7 +5,7 @@ use App\Models\UsersModel;
 use CodeIgniter\RESTful\ResourceController;
 use Firebase\JWT\JWT;
 
-class RestOtbs extends ResourceController
+class RestOtbs extends Auth
 {
     protected $modelName = 'App\Models\OtbsModel';
     protected $format  = 'json';
@@ -38,6 +38,7 @@ class RestOtbs extends ResourceController
 
     public function create(){ 
 
+        $token = $this->request->getHeader('Authorization')->getValue();
         $otbModel =new OtbsModel(); 
         $userModel=new UsersModel();      
         $data = array('Name' => $this->request->getPost('Name'),
@@ -49,7 +50,12 @@ class RestOtbs extends ResourceController
         }
 
         if($this->validate('otbsInsert')){
-            $existe=$userModel->find($data["User_ID"]);
+            if($this->validateToken($token)){
+                return $this->genericResponse(null,"Creado",200);
+            }else{
+                return $this->genericResponse(null,"Token Invalido",401);
+            }
+            /*$existe=$userModel->find($data["User_ID"]);
             
             if(!$existe){ 
                 return $this->genericResponse(null,"ID de usuario no encontrado",404);
@@ -60,8 +66,11 @@ class RestOtbs extends ResourceController
             if(!$res){               
                 return $this->genericResponse(null,"Error en la transacción",500);
                 
-            }
-            return $this->genericResponse($res,null,200);
+            }*/
+
+            //JWT
+            
+            return $this->genericResponse(['token' => $jwt],null,200);
         }
 
         $validation= \Config\Services::validation();
