@@ -9,25 +9,20 @@ class Auth extends ResourceController
 
 	protected $format = 'json';
 
-	public function create()
+	public function createJWT($email, $password)
 	{
 		/**
 		 * JWT claim types
 		 * https://auth0.com/docs/tokens/concepts/jwt-claims#reserved-claims
 		 */
 
-		$email = $this->request->getPost('email');
-		$password = $this->request->getPost('password');
-
 		// add code to fetch through db and check they are valid
 		// sending no email and password also works here because both are empty
-		if ($email === $password) {
-            $time = time();
+		if ($email != null && $password != null) {
 			$key = Services::getSecretKey();
 			$payload = [
-                'iat' => $time,
-                'exp' => $time +60,
-				'data' => ['email' => 'admn@admin.com', 'name' => 'Juan'],
+                'iat' => getdate(time()),
+				'data' => ['Email' => $email, 'Password' => $password],
 			];
 
 			/**
@@ -37,7 +32,9 @@ class Auth extends ResourceController
 			 * for a list of spec-compliant algorithms.
 			 */
 			$jwt = JWT::encode($payload, $key);
+			print($jwt);
 			return $this->respond(['token' => $jwt], 200);
+			//return $jwt;
 		}
 
 		return $this->respond(['message' => 'Invalid login details'], 401);
