@@ -32,8 +32,7 @@ class Auth extends ResourceController
 			 * for a list of spec-compliant algorithms.
 			 */
 			$jwt = JWT::encode($payload, $key);
-			print($jwt);
-			return $this->respond(['token' => $jwt], 200);
+			return $jwt;
 			//return $jwt;
 		}
 
