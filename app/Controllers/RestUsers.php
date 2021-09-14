@@ -10,6 +10,7 @@ class RestUsers extends Auth
     protected $modelName = 'App\Models\UsersModel';
     protected $format    = 'json';
     
+    
     public function index()
     {
         $token = ($this->request->getHeader('Authorization')!=null)?$this->request->getHeader('Authorization')->getValue():"";
@@ -75,7 +76,7 @@ class RestUsers extends Auth
     }
 
     public function create(){
-
+        
         $token = ($this->request->getHeader('Authorization')!=null)?$this->request->getHeader('Authorization')->getValue():"";
         if($this->validateToken($token)){
             $data = array('Name' => $this->request->getPost('Name'),
@@ -93,13 +94,12 @@ class RestUsers extends Auth
                 
                 $id=$this->model->insert([
                     'Name'=>$data['Name'],
-                    'Password'=>$data['Password'],
+                    'Password'=> md5($data['Password']),
                     'Cell_phone'=>$data['Cell_phone'],
                     'Ci'=>$data['Ci'],
                     'Email'=>$data['Email'],
                     'Otb_ID'=>$data['Otb_ID']
                 ]);
-    
                 return $this-> genericResponse(null,"Usuario creado",200);
                 
             }
@@ -195,7 +195,7 @@ class RestUsers extends Auth
         ->where(['Email'=>$email])
         ->first();
         if($Userdata){
-            if($password==$Userdata['Password']){
+            if(md5($password)==$Userdata['Password']){
                 if($Userdata['State']==0){
                     return $this-> genericResponse(null,'Cuenta de usuario inhabilitada',401);
                 }
