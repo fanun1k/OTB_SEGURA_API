@@ -24,7 +24,7 @@ class OtbsModel extends Model
     $userModel=new UsersModel();
       
       $this->db->transStart(); //iniciamos la transaccion 
-      $otbId=$this->insert($data); //primera consulta
+      $otbId=$this->insert(["Name" => $data["Name"]]); //primera consulta
       $userModel->update($userId,["Otb_ID"=>$otbId]); //segunda consulta
       $this->db->transComplete(); // terminando la transaccion
 

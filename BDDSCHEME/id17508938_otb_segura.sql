@@ -93,6 +93,18 @@ ENGINE = InnoDB
 AUTO_INCREMENT = 9
 DEFAULT CHARACTER SET = utf8;
 
+-- -----------------------------------------------------
+-- Table `mydb`.`tokens`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `otb_segura_db`.`tokens` (
+  `Jwt` VARCHAR(700) NULL,
+  `User_ID` INT(11) NOT NULL,
+  CONSTRAINT `fk_tokens_user`
+    FOREIGN KEY (`User_ID`)
+    REFERENCES `otb_segura_db`.`user` (`User_ID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
 
 -- -----------------------------------------------------
 -- Table `otb_segura_db`.`alert`

@@ -19,6 +19,11 @@ use CodeIgniter\Config\BaseService;
  */
 class Services extends BaseService
 {
+	public static function getSecretKey()
+	{
+		return 'otbSegura2021';
+	}
+
 	// public static function example($getShared = true)
 	// {
 	//     if ($getShared)

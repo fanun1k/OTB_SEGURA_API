@@ -64,6 +64,7 @@ class Validation
 		'Password'=>'required|min_length[5]|max_length[60]',
 		'Cell_phone' => 'required|exact_length[8]',
 		'Ci' => 'required|min_length[6]|max_length[15]',
+		'Otb_ID' => 'required|min_length[1]'
 	];
 
 	public $usersUpdate=[
