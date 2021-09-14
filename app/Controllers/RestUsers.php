@@ -81,8 +81,7 @@ class RestUsers extends Auth
                     'Password' => $this->request->getPost('Password'), 
                     'Cell_phone'=>$this->request->getPost('Cell_phone'),
                     'Ci'=>$this->request->getPost('Ci'),
-                    'Email'=>$this->request->getPost('Email'),
-                    'Otb_ID'=>$this->request->getPost('Otb_ID'));
+                    'Email'=>$this->request->getPost('Email'));
 
         if(!array_filter($data)){
             $data = $this->request->getJSON(true);
@@ -95,11 +94,12 @@ class RestUsers extends Auth
                 'Password'=> md5($data['Password']),
                 'Cell_phone'=>$data['Cell_phone'],
                 'Ci'=>$data['Ci'],
-                'Email'=>$data['Email'],
-                'Otb_ID'=>$data['Otb_ID']
+                'Email'=>$data['Email']
             ]);
+            if (!$id){
+                return $this-> genericResponse(null,"Error al insertar",500);
+            }
             return $this-> genericResponse(null,"Usuario creado",200);
-            
         }
 
         $validation= \Config\Services::validation();
@@ -202,7 +202,7 @@ class RestUsers extends Auth
                     $tokenModel->insert([
                         'Jwt' => $token,
                         'User_ID' => $Userdata['User_ID']
-                    ]);
+                    ]); 
                 }else{
                     $tokenModel->update($Userdata['User_ID'],[
                         'Jwt' => $token
