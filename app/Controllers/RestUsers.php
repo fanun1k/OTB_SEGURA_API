@@ -76,40 +76,35 @@ class RestUsers extends Auth
     }
 
     public function create(){
-        
-        $token = ($this->request->getHeader('Authorization')!=null)?$this->request->getHeader('Authorization')->getValue():"";
-        if($this->validateToken($token)){
-            $data = array('Name' => $this->request->getPost('Name'),
-                        'Password' => $this->request->getPost('Password'), 
-                        'Cell_phone'=>$this->request->getPost('Cell_phone'),
-                        'Ci'=>$this->request->getPost('Ci'),
-                        'Email'=>$this->request->getPost('Email'),
-                        'Otb_ID'=>$this->request->getPost('Otb_ID'));
 
-            if(!array_filter($data)){
-                $data = $this->request->getJSON(true);
-            }
+        $data = array('Name' => $this->request->getPost('Name'),
+                    'Password' => $this->request->getPost('Password'), 
+                    'Cell_phone'=>$this->request->getPost('Cell_phone'),
+                    'Ci'=>$this->request->getPost('Ci'),
+                    'Email'=>$this->request->getPost('Email'),
+                    'Otb_ID'=>$this->request->getPost('Otb_ID'));
 
-            if($this->validate('usersInsert')){
-                
-                $id=$this->model->insert([
-                    'Name'=>$data['Name'],
-                    'Password'=> md5($data['Password']),
-                    'Cell_phone'=>$data['Cell_phone'],
-                    'Ci'=>$data['Ci'],
-                    'Email'=>$data['Email'],
-                    'Otb_ID'=>$data['Otb_ID']
-                ]);
-                return $this-> genericResponse(null,"Usuario creado",200);
-                
-            }
-
-            $validation= \Config\Services::validation();
-            return $this->genericResponse(null,$validation->getErrors(),500);
-
-        }else{
-            return $this->genericResponse(null,"Token Invalido",401);
+        if(!array_filter($data)){
+            $data = $this->request->getJSON(true);
         }
+
+        if($this->validate('usersInsert')){
+            
+            $id=$this->model->insert([
+                'Name'=>$data['Name'],
+                'Password'=> md5($data['Password']),
+                'Cell_phone'=>$data['Cell_phone'],
+                'Ci'=>$data['Ci'],
+                'Email'=>$data['Email'],
+                'Otb_ID'=>$data['Otb_ID']
+            ]);
+            return $this-> genericResponse(null,"Usuario creado",200);
+            
+        }
+
+        $validation= \Config\Services::validation();
+        return $this->genericResponse(null,$validation->getErrors(),500);
+
     }
     
     public function update($id=null){
