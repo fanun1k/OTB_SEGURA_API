@@ -194,7 +194,6 @@ class RestUsers extends Auth
                 if($Userdata['State']==0){
                     return $this-> genericResponse(null,'Cuenta de usuario inhabilitada',401);
                 }
-
                 $tokenModel = new TokensModel();
                 $token = $this->createJWT($Userdata['Email'], $Userdata['Password']);
                 if(!$tokenModel->where(['User_ID' => $Userdata['User_ID']])->first())
@@ -202,13 +201,12 @@ class RestUsers extends Auth
                     $tokenModel->insert([
                         'Jwt' => $token,
                         'User_ID' => $Userdata['User_ID']
-                    ]); 
+                    ]);
                 }else{
                     $tokenModel->update($Userdata['User_ID'],[
                         'Jwt' => $token
                     ]);
                 }
-                    
                 $Userdata = $Userdata + ['Token' => $token];
                 return $this-> genericResponse(array($Userdata),null,200);
             }
