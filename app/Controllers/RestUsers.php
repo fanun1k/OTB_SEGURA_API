@@ -3,64 +3,85 @@
 use App\Models\OtbsModel;
 use App\Models\UsersModel;
 use CodeIgniter\RESTful\ResourceController;
+use App\Models\TokensModel;
 
-class RestUsers extends ResourceController
+class RestUsers extends Auth
 {
     protected $modelName = 'App\Models\UsersModel';
     protected $format    = 'json';
     
+    
     public function index()
     {
-        return $this->genericResponse($this->model->where('State', 1)->findAll(),"",200);
+        $token = ($this->request->getHeader('Authorization')!=null)?$this->request->getHeader('Authorization')->getValue():"";
+        if($this->validateToken($token)){
+            return $this->genericResponse($this->model->where('State', 1)->findAll(),"",200);
+        }else{
+            return $this->genericResponse(null,"Token Invalido",401);
+        }
+        
     }
 
     public function show($id = null)
     {
-        if ($id == null)
-        {
-            return $this->genericResponse(null,"El ID no fue encontrado",500);
+        $token = ($this->request->getHeader('Authorization')!=null)?$this->request->getHeader('Authorization')->getValue():"";
+        if($this->validateToken($token)){
+            if ($id == null)
+            {
+                return $this->genericResponse(null,"El ID no fue encontrado",500);
+            }
+            
+            $user=$this->model->where('User_ID', $id)->findAll();
+            
+            if($user && $user[0]['State'] == 0){
+                return $this->genericResponse(null,"El usuario esta inhabilitado", 401);
+            }
+
+            if (!$user)
+            {
+                return $this->genericResponse(null,"El usuario no existe",500);
+            }
+
+            return $this->genericResponse($user,"",200);
+        }else{
+            return $this->genericResponse(null,"Token Invalido",401);
         }
         
-        $user=$this->model->where('User_ID', $id)->findAll();
-        
-        if($user && $user[0]['State'] == 0){
-            return $this->genericResponse(null,"El usuario esta inhabilitado", 401);
-        }
-
-        if (!$user)
-        {
-            return $this->genericResponse(null,"El usuario no existe",500);
-        }
-
-        return $this->genericResponse($user,"",200);
     }
 
     public function listusersbyotb($id){
         
-        $otbModel=new OtbsModel();
-        if ($id == null){
-            return $this->genericResponse(null,"El ID no fue encontrado",500);
+        $token = ($this->request->getHeader('Authorization')!=null)?$this->request->getHeader('Authorization')->getValue():"";
+        if($this->validateToken($token)){
+            $otbModel=new OtbsModel();
+            if ($id == null){
+                return $this->genericResponse(null,"El ID no fue encontrado",500);
+            }
+    
+            $otb = $otbModel->find($id);
+    
+            if(!$otb){
+                return $this->genericResponse(null,"la otb no existe",500);
+            }
+    
+            $UsersData = $this->model->where('Otb_ID', $otb['Otb_ID']);
+            $UsersData = $UsersData->where('State', 1)->findAll();
+    
+            return $this->genericResponse($UsersData,"",200);
+
+        }else{
+            return $this->genericResponse(null,"Token Invalido",401);
         }
-
-        $otb = $otbModel->find($id);
-
-        if(!$otb){
-            return $this->genericResponse(null,"la otb no existe",500);
-        }
-
-        $UsersData = $this->model->where('Otb_ID', $otb['Otb_ID']);
-        $UsersData = $UsersData->where('State', 1)->findAll();
-
-        return $this->genericResponse($UsersData,"",200);
+        
     }
 
     public function create(){
-        
+
         $data = array('Name' => $this->request->getPost('Name'),
-                       'Password' => $this->request->getPost('Password'), 
-                       'Cell_phone'=>$this->request->getPost('Cell_phone'),
-                       'Ci'=>$this->request->getPost('Ci'),
-                       'Email'=>$this->request->getPost('Email'));
+                    'Password' => $this->request->getPost('Password'), 
+                    'Cell_phone'=>$this->request->getPost('Cell_phone'),
+                    'Ci'=>$this->request->getPost('Ci'),
+                    'Email'=>$this->request->getPost('Email'));
 
         if(!array_filter($data)){
             $data = $this->request->getJSON(true);
@@ -70,70 +91,84 @@ class RestUsers extends ResourceController
             
             $id=$this->model->insert([
                 'Name'=>$data['Name'],
-                'Password'=>$data['Password'],
+                'Password'=> md5($data['Password']),
                 'Cell_phone'=>$data['Cell_phone'],
                 'Ci'=>$data['Ci'],
                 'Email'=>$data['Email']
             ]);
-
+            if (!$id){
+                return $this-> genericResponse(null,"Error al insertar",500);
+            }
             return $this-> genericResponse(null,"Usuario creado",200);
         }
 
         $validation= \Config\Services::validation();
-        return $this->genericResponse(null,$validation->getErrors(),500);   
+        return $this->genericResponse(null,$validation->getErrors(),500);
+
     }
     
     public function update($id=null){
 
-        $data=$this->request->getRawInput();
-        $user=$this->model->where('User_ID', $id)->findAll();
-        
-        if (!$user)//si el id no existe devolvera un error
-        {
-            return $this->genericResponse(null,"el usuario no existe",500);
-        }
-        
-        if($user && $user[0]['State'] == 0){
-            return $this->genericResponse(null,"El usuario esta inhabilitado", 401);
-        }
-        
-        $data2 = $this->request->getJSON(true);
-        if ($data2){
-            $data = $data2;
-        }
+        $token = ($this->request->getHeader('Authorization')!=null)?$this->request->getHeader('Authorization')->getValue():"";
+        if($this->validateToken($token)){
 
-        if ($this->validate('usersUpdate')){
-
-            $userModel = $this->model->update($id,[
-                'Name'=>$data['Name'],
-                'Password'=>$data['Password'],
-                'Cell_phone'=>$data['Cell_phone']
-            ]);
+            $data=$this->request->getRawInput();
+            $user=$this->model->where('User_ID', $id)->findAll();
             
-            return $this-> genericResponse(null,"Usuario modificado",200);
+            if (!$user)//si el id no existe devolvera un error
+            {
+                return $this->genericResponse(null,"el usuario no existe",500);
+            }
+            
+            if($user && $user[0]['State'] == 0){
+                return $this->genericResponse(null,"El usuario esta inhabilitado", 401);
+            }
+            
+            $data2 = $this->request->getJSON(true);
+            if ($data2){
+                $data = $data2;
+            }
+
+            if ($this->validate('usersUpdate')){
+
+                $userModel = $this->model->update($id,[
+                    'Name'=>$data['Name'],
+                    'Password'=>$data['Password'],
+                    'Cell_phone'=>$data['Cell_phone']
+                ]);
+                
+                return $this-> genericResponse(null,"Usuario modificado",200);
+            }
+        
+            $validation= \Config\Services::validation();
+            return $this->genericResponse(null,$validation->getErrors(),500);  
+
+        }else{
+            return $this->genericResponse(null,"Token Invalido",401);
         }
-     
-        $validation= \Config\Services::validation();
-        return $this->genericResponse(null,$validation->getErrors(),500);  
     }
 
     public function delete($id=null){
 
-        $user=$this->model->find($id);
+        $token = ($this->request->getHeader('Authorization')!=null)?$this->request->getHeader('Authorization')->getValue():"";
+        if($this->validateToken($token)){
+            $user=$this->model->find($id);
 
-        if (!$user)
-        {
-            return $this->genericResponse(null,"el usuario no existe",500);
-        }
-        
-        if  ($user['State'] == 1){
-            $this->model->update($id,[
-                'State'=>0
-            ]);
-        }
-        
-
-        return $this-> genericResponse('El usuario fue eliminado',null,200);    
+            if (!$user)
+            {
+                return $this->genericResponse(null,"el usuario no existe",500);
+            }
+            
+            if  ($user['State'] == 1){
+                $this->model->update($id,[
+                    'State'=>0
+                ]);
+            }
+            
+            return $this-> genericResponse('El usuario fue eliminado',null,200);   
+        }else{
+            return $this->genericResponse(null,"Token Invalido",401);
+        } 
     }
 
     public function login()
@@ -155,10 +190,26 @@ class RestUsers extends ResourceController
         ->where(['Email'=>$email])
         ->first();
         if($Userdata){
-            if($password==$Userdata['Password']){
+            if(md5($password)==$Userdata['Password']){
                 if($Userdata['State']==0){
                     return $this-> genericResponse(null,'Cuenta de usuario inhabilitada',401);
                 }
+
+                $tokenModel = new TokensModel();
+                $token = $this->createJWT($Userdata['Email'], $Userdata['Password']);
+                if(!$tokenModel->where(['User_ID' => $Userdata['User_ID']])->first())
+                {
+                    $tokenModel->insert([
+                        'Jwt' => $token,
+                        'User_ID' => $Userdata['User_ID']
+                    ]); 
+                }else{
+                    $tokenModel->update($Userdata['User_ID'],[
+                        'Jwt' => $token
+                    ]);
+                }
+                    
+                $Userdata = $Userdata + ['Token' => $token];
                 return $this-> genericResponse(array($Userdata),null,200);
             }
             else{

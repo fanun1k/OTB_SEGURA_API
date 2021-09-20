@@ -63,7 +63,7 @@ class Validation
 		'Email'=>'required|min_length[6]|max_length[35]',
 		'Password'=>'required|min_length[5]|max_length[60]',
 		'Cell_phone' => 'required|exact_length[8]',
-		'Ci' => 'required|min_length[6]|max_length[15]',
+		'Ci' => 'required|min_length[6]|max_length[15]'
 	];
 
 	public $usersUpdate=[

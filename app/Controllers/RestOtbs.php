@@ -3,8 +3,9 @@
 use App\Models\OtbsModel;
 use App\Models\UsersModel;
 use CodeIgniter\RESTful\ResourceController;
+use Firebase\JWT\JWT;
 
-class RestOtbs extends ResourceController
+class RestOtbs extends Auth
 {
     protected $modelName = 'App\Models\OtbsModel';
     protected $format  = 'json';
@@ -37,7 +38,8 @@ class RestOtbs extends ResourceController
 
     public function create(){ 
 
-        $otbModel =new OtbsModel(); 
+        $token = ($this->request->getHeader('Authorization')!=null)?$this->request->getHeader('Authorization')->getValue():"";
+        $otbModel =new OtbsModel();
         $userModel=new UsersModel();      
         $data = array('Name' => $this->request->getPost('Name'),
                       'User_ID'=>$this->request->getPost('User_ID'));
@@ -48,19 +50,25 @@ class RestOtbs extends ResourceController
         }
 
         if($this->validate('otbsInsert')){
-            $existe=$userModel->find($data["User_ID"]);
+            if($this->validateToken($token)){
+                $existe=$userModel->find($data["User_ID"]);
             
-            if(!$existe){ 
-                return $this->genericResponse(null,"ID de usuario no encontrado",404);
+                if(!$existe){ 
+                    return $this->genericResponse(null,"ID de usuario no encontrado",404);
+                }
+                $permitted_chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+                $res=$otbModel->InsertOtb($data["User_ID"],["Name"=>$data["Name"],"Code"=>substr(str_shuffle($permitted_chars), 0, 8)]);
+            
+                if(!$res){               
+                    return $this->genericResponse(null,"Error en la transacción",500);
+                    
+                }
+
+                return $this->genericResponse('Otb Creada',null,200);
+
+            }else{
+                return $this->genericResponse(null,"Token Invalido",401);
             }
-            $permitted_chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-            $res=$otbModel->InsertOtb($data["User_ID"],["Name"=>$data["Name"],"Code"=>substr(str_shuffle($permitted_chars), 0, 8)]);
-           
-            if(!$res){               
-                return $this->genericResponse(null,"Error en la transacción",500);
-                
-            }
-            return $this->genericResponse($res,null,200);
         }
 
         $validation= \Config\Services::validation();
@@ -92,42 +100,6 @@ class RestOtbs extends ResourceController
         return $this-> genericResponse($this->model->find($id),null,200);
         
      
-    }
-    public function joinOtb(){
-
-        $userModel=new UsersModel();
-
-        $data=array(
-            'User_ID'=>$this->request->getPost('User_ID'),
-            'Code'=>$this->request->getPost('Code')
-        );   
-
-        if(!array_filter($data)){
-            $data = $this->request->getJSON(true);
-        }
-        if($this->validate('joinOtb')){
-            $otb=$this->model->where('Code', $data['Code'])->findAll();
-
-            if (!$otb)
-            {
-                return $this->genericResponse(null,"El Código no pertenece a ninguna OTB activa",404); 
-            }
-            
-            if($otb && $otb[0]['State'] == 1){
-                
-                $user=$userModel->find($data['User_ID']);
-                
-                if(!$user){
-                   
-                    return $this->genericResponse(null,"No se encontro al usuario",404);  
-                }
-                $userModel->update($data['User_ID'],['Otb_ID'=>$otb[0]['Otb_ID']]);
-                
-                return $this->genericResponse($otb,null, 200);
-            }
-        }
-        $validation= \Config\Services::validation();
-        return $this->genericResponse(null,$validation->getErrors(),500);   
     }
 
     public function delete($id=null){ 

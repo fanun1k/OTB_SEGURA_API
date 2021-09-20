@@ -40,7 +40,13 @@ $routes->resource('restAlarm',['controller'=>'RestAlarms']);
 $routes->resource('restCamera',['controller' => 'RestCameras']);
 $routes->post("restUser/login","RestUsers::login");
 $routes->resource('restUser', ['placeholder' => '(:num)', 'controller'=>'RestUsers']);
-$routes->get('restUser/byotb/(:num)', 'RestUsers::listusersbyotb/$1' );
+$routes->get('restUser/byotb/(:num)', 'RestUsers::listusersbyotb/$1', );
+
+//Routas de JWT
+//$routes->resource('auth', ['controller' => 'Auth']);
+//$routes->resource('api/user', ['controller' => 'User']);
+
+
 $routes->POST('restOtb/joinOtb','RestOtbs::joinOtb');
 $routes->resource('restOtb',['placeholder' => '(:num)','controller'=>'RestOtbs']);
 /*
