@@ -132,8 +132,6 @@ class RestAlertType extends ResourceController
         }else{
             return $this->genericResponse(null,"Token Invalido",401);
         }
-
-         
     }
         
     private function genericResponse($data,$msj,$code)

@@ -171,23 +171,25 @@ class RestUsers extends ResourceController
         } 
     }
     public function SetAdmin(){
-        $user_ID=$this->request->getPost('User_ID');
-        $Jsondata=$this->request->getJSON(true);
-
-        if($Jsondata){
-
-            $user_ID=$Jsondata['User_ID'];
-        }  
-        if ($this->validate('setAdmin')) {
+        $token = ($this->request->getHeader('Authorization')!=null)?$this->request->getHeader('Authorization')->getValue():"";
+        if($this->validateToken($token)){
+            $user_ID=$this->request->getPost('User_ID');
+            $Jsondata=$this->request->getJSON(true);
+    
+            if($Jsondata){
+    
+                $user_ID=$Jsondata['User_ID'];
+            }  
+    
             $user=$this->model->find($user_ID);
             if ($user) {
-                $this->model->update($user["User_ID"], [
-                                    "Type"=>1]);
+                $this->model->update($user["User_ID"],[
+                                        "Type"=>1]);
             }
-            return $this->genericResponse(null, 'No se encontró al usuario', 500);
+            return $this->genericResponse(null,'No se encontró al usuario',500);
+        }else{
+            return $this->genericResponse(null,"Token Invalido",401);
         }
-        $validation= \Config\Services::validation();
-        return $this->genericResponse(null,$validation->getErrors(),500); 
     }
 
     public function login()
@@ -242,7 +244,6 @@ class RestUsers extends ResourceController
         }
         $validation= \Config\Services::validation();
         return $this->genericResponse(null,$validation->getErrors(),500);
-          
     }
 
  

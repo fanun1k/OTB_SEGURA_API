@@ -79,8 +79,6 @@ class RestCameras extends ResourceController
         }else{
             return $this->genericResponse(null,"Token Invalido",401);
         }
-         
-        
     }
     
     public function update($id=null){
@@ -109,8 +107,6 @@ class RestCameras extends ResourceController
         }else{
             return $this->genericResponse(null,"Token Invalido",401);
         }
-        
-        
     }
 
     public function delete($id=null){ 
