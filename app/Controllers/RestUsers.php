@@ -202,40 +202,45 @@ class RestUsers extends ResourceController
 
             $email=$Jsondata['Email'];
             $password=$Jsondata['Password'];
-        }        
-        $Userdata=$this->model
-        ->where(['Email'=>$email])
-        ->first();
-        if($Userdata){
-            if(md5($password)==$Userdata['Password']){
-                if($Userdata['State']==0){
-                    return $this-> genericResponse(null,'Cuenta de usuario inhabilitada',401);
+        }
+        if($this->validate('usersLogin')){
+            $Userdata=$this->model
+            ->where(['Email'=>$email])
+            ->first();
+            if($Userdata){
+                if(md5($password)==$Userdata['Password']){
+                    if($Userdata['State']==0){
+                        return $this-> genericResponse(null,'Cuenta de usuario inhabilitada',401);
+                    }
+    
+                    $tokenModel = new TokensModel();
+                    $token = $this->createJWT($Userdata['Email'], $Userdata['Password']);
+                    if(!$tokenModel->where(['User_ID' => $Userdata['User_ID']])->first())
+                    {
+                        $tokenModel->insert([
+                            'Jwt' => $token,
+                            'User_ID' => $Userdata['User_ID']
+                        ]); 
+                    }else{
+                        $tokenModel->update($Userdata['User_ID'],[
+                            'Jwt' => $token
+                        ]);
+                    }
+                        
+                    $Userdata = $Userdata + ['Token' => $token];
+                    return $this-> genericResponse(array($Userdata),null,200);
                 }
-
-                $tokenModel = new TokensModel();
-                $token = $this->createJWT($Userdata['Email'], $Userdata['Password']);
-                if(!$tokenModel->where(['User_ID' => $Userdata['User_ID']])->first())
-                {
-                    $tokenModel->insert([
-                        'Jwt' => $token,
-                        'User_ID' => $Userdata['User_ID']
-                    ]); 
-                }else{
-                    $tokenModel->update($Userdata['User_ID'],[
-                        'Jwt' => $token
-                    ]);
+                else{
+                    return $this-> genericResponse(null,'Contraseña incorrecta',401);
                 }
-                    
-                $Userdata = $Userdata + ['Token' => $token];
-                return $this-> genericResponse(array($Userdata),null,200);
             }
             else{
-                return $this-> genericResponse(null,'Contraseña incorrecta',401);
+                return $this-> genericResponse(null,'Usuario no registrado',401); 
             }
         }
-        else{
-            return $this-> genericResponse(null,'Usuario no registrado',401); 
-        }  
+        $validation= \Config\Services::validation();
+        return $this->genericResponse(null,$validation->getErrors(),500);
+          
     }
 
  
