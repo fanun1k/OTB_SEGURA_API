@@ -11,7 +11,7 @@ class AuthFilter implements FilterInterface
 {
 	use ResponseTrait;
 
-	public function before(RequestInterface $request)
+	public function before(RequestInterface $request,$arguments=null)
 	{
 		$key        = Services::getSecretKey();
 		$authHeader = $request->getServer('HTTP_AUTHORIZATION');

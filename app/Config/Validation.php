@@ -72,6 +72,11 @@ class Validation
 		'Cell_phone' => 'required|exact_length[8]'
 	];
 
+	public $usersLogin=[
+		'Email' => 'required|min_length[6]|max_length[35]',
+		'Password' => 'required|min_length[5]|max_length[60]'
+	];
+
 	public $otbsInsert=[
 		'Name'=>'required|min_length[5]|max_length[100]',
 		'User_ID'=>'required|min_length[1]|integer' 
@@ -97,6 +102,9 @@ class Validation
 		'User_ID'=>'required|integer',
 		'Code'=>'required|alpha_numeric|exact_length[8]'
 
+	];
+	public $setAdmin=[
+		'User_ID'=>'required|integer'
 	];
 	//--------------------------------------------------------------------
 	

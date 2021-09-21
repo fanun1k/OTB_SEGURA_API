@@ -5,7 +5,7 @@ use App\Models\UsersModel;
 use CodeIgniter\RESTful\ResourceController;
 use App\Models\TokensModel;
 
-class RestUsers extends Auth
+class RestUsers extends ResourceController
 {
     protected $modelName = 'App\Models\UsersModel';
     protected $format    = 'json';
@@ -170,6 +170,27 @@ class RestUsers extends Auth
             return $this->genericResponse(null,"Token Invalido",401);
         } 
     }
+    public function SetAdmin(){
+        $token = ($this->request->getHeader('Authorization')!=null)?$this->request->getHeader('Authorization')->getValue():"";
+        if($this->validateToken($token)){
+            $user_ID=$this->request->getPost('User_ID');
+            $Jsondata=$this->request->getJSON(true);
+    
+            if($Jsondata){
+    
+                $user_ID=$Jsondata['User_ID'];
+            }  
+    
+            $user=$this->model->find($user_ID);
+            if ($user) {
+                $this->model->update($user["User_ID"],[
+                                        "Type"=>1]);
+            }
+            return $this->genericResponse(null,'No se encontró al usuario',500);
+        }else{
+            return $this->genericResponse(null,"Token Invalido",401);
+        }
+    }
 
     public function login()
     {
@@ -185,38 +206,44 @@ class RestUsers extends Auth
 
             $email=$Jsondata['Email'];
             $password=$Jsondata['Password'];
-        }        
-        $Userdata=$this->model
-        ->where(['Email'=>$email])
-        ->first();
-        if($Userdata){
-            if(md5($password)==$Userdata['Password']){
-                if($Userdata['State']==0){
-                    return $this-> genericResponse(null,'Cuenta de usuario inhabilitada',401);
+        }
+        if($this->validate('usersLogin')){
+            $Userdata=$this->model
+            ->where(['Email'=>$email])
+            ->first();
+            if($Userdata){
+                if(md5($password)==$Userdata['Password']){
+                    if($Userdata['State']==0){
+                        return $this-> genericResponse(null,'Cuenta de usuario inhabilitada',401);
+                    }
+    
+                    $tokenModel = new TokensModel();
+                    $token = $this->createJWT($Userdata['Email'], $Userdata['Password']);
+                    if(!$tokenModel->where(['User_ID' => $Userdata['User_ID']])->first())
+                    {
+                        $tokenModel->insert([
+                            'Jwt' => $token,
+                            'User_ID' => $Userdata['User_ID']
+                        ]); 
+                    }else{
+                        $tokenModel->update($Userdata['User_ID'],[
+                            'Jwt' => $token
+                        ]);
+                    }
+                        
+                    $Userdata = $Userdata + ['Token' => $token];
+                    return $this-> genericResponse(array($Userdata),null,200);
                 }
-                $tokenModel = new TokensModel();
-                $token = $this->createJWT($Userdata['Email'], $Userdata['Password']);
-                if(!$tokenModel->where(['User_ID' => $Userdata['User_ID']])->first())
-                {
-                    $tokenModel->insert([
-                        'Jwt' => $token,
-                        'User_ID' => $Userdata['User_ID']
-                    ]);
-                }else{
-                    $tokenModel->update($Userdata['User_ID'],[
-                        'Jwt' => $token
-                    ]);
+                else{
+                    return $this-> genericResponse(null,'Contraseña incorrecta',401);
                 }
-                $Userdata = $Userdata + ['Token' => $token];
-                return $this-> genericResponse(array($Userdata),null,200);
             }
             else{
-                return $this-> genericResponse(null,'Contraseña incorrecta',401);
+                return $this-> genericResponse(null,'Usuario no registrado',401); 
             }
         }
-        else{
-            return $this-> genericResponse(null,'Usuario no registrado',401); 
-        }  
+        $validation= \Config\Services::validation();
+        return $this->genericResponse(null,$validation->getErrors(),500);
     }
 
  
