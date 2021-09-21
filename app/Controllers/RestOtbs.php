@@ -63,8 +63,7 @@ class RestOtbs extends Auth
                     return $this->genericResponse(null,"Error en la transacción",500);
                     
                 }
-
-                return $this->genericResponse('Otb Creada',null,200);
+                return $this->genericResponse($res,null,200);
 
             }else{
                 return $this->genericResponse(null,"Token Invalido",401);
