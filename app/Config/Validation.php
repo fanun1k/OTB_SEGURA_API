@@ -103,6 +103,9 @@ class Validation
 		'Code'=>'required|alpha_numeric|exact_length[8]'
 
 	];
+	public $setAdmin=[
+		'User_ID'=>'required|integer'
+	];
 	//--------------------------------------------------------------------
 	
 	// Rules

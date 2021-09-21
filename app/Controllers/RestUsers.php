@@ -178,14 +178,16 @@ class RestUsers extends ResourceController
 
             $user_ID=$Jsondata['User_ID'];
         }  
-
-        $user=$this->model->find($user_ID);
-        if ($user) {
-            $this->model->update($user["User_ID"],[
+        if ($this->validate('setAdmin')) {
+            $user=$this->model->find($user_ID);
+            if ($user) {
+                $this->model->update($user["User_ID"], [
                                     "Type"=>1]);
+            }
+            return $this->genericResponse(null, 'No se encontró al usuario', 500);
         }
-        return $this->genericResponse(null,'No se encontró al usuario',500);
-
+        $validation= \Config\Services::validation();
+        return $this->genericResponse(null,$validation->getErrors(),500); 
     }
 
     public function login()
