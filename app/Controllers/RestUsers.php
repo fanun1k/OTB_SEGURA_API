@@ -193,6 +193,53 @@ class RestUsers extends ResourceController
         }
     }
 
+    public function RemoveAdmin(){
+        $token = ($this->request->getHeader('Authorization')!=null)?$this->request->getHeader('Authorization')->getValue():"";
+        if($this->validateToken($token)){
+            $user_ID=$this->request->getPost('User_ID');
+            $Jsondata=$this->request->getJSON(true);
+    
+            if($Jsondata){
+    
+                $user_ID=$Jsondata['User_ID'];
+            }  
+    
+            $user=$this->model->find($user_ID);
+            if ($user) {
+                $this->model->update($user["User_ID"],[
+                                        "Type"=>0]);
+                return $this->genericResponse(null,'Se quito el modo de administrador',200);
+            }
+            return $this->genericResponse(null,'No se encontró al usuario',500);
+        }else{
+            return $this->genericResponse(null,"Token Invalido",401);
+        }
+    }
+
+    public function RemoveOTB(){
+        $token = ($this->request->getHeader('Authorization')!=null)?$this->request->getHeader('Authorization')->getValue():"";
+        if($this->validateToken($token)){
+            $user_ID=$this->request->getPost('User_ID');
+            $Jsondata=$this->request->getJSON(true);
+    
+            if($Jsondata){
+                $user_ID=$Jsondata['User_ID'];
+            }  
+    
+            $user=$this->model->find($user_ID);
+            if ($user) {
+                $this->model->update($user["User_ID"],[
+                    "Otb_ID"=>null,
+                    "Type"=> 0
+                ]);
+                return $this-> genericResponse(null,'El usuario fue removido de la OTB',200);
+            }
+            return $this->genericResponse(null,'No se encontró al usuario',500);
+        }else{
+            return $this->genericResponse(null,"Token Invalido",401);
+        }
+    }
+
     public function login()
     {
         $email=$this->request->getPost('Email');

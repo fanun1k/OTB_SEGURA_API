@@ -77,7 +77,11 @@ class RestOtbs extends ResourceController
                         
                     }
 
+<<<<<<< HEAD
+                    return $this->genericResponse(null,'Otb Creada',200);
+=======
                     return $this->genericResponse($res,null,200);
+>>>>>>> f0a393255fb963a377ac94fa40f3709ae9eb8b6c
 
                 }else{
                     return $this->genericResponse(null,"Token Invalido",401);
