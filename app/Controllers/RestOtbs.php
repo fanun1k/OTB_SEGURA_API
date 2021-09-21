@@ -75,9 +75,7 @@ class RestOtbs extends ResourceController
                         return $this->genericResponse(null,"Error en la transacción",500);
                         
                     }
-
-                    return $this->genericResponse(null,'OTB creada con éxito!',200);
-
+                    return $this->genericResponse($res,null,200);
                 }else{
                     return $this->genericResponse(null,"Token Invalido",401);
                 }
