@@ -11,7 +11,12 @@ class RestCameras extends ResourceController
     
     public function index()
     {
-        return $this->genericResponse($this->model->where('State', 1)->findAll(),"",200);
+        $token = ($this->request->getHeader('Authorization')!=null)?$this->request->getHeader('Authorization')->getValue():"";
+        if($this->validateToken($token)){
+            return $this->genericResponse($this->model->where('State', 1)->findAll(),"",200);
+        }else{
+            return $this->genericResponse(null,"Token Invalido",401);
+        }
     }
 
     public function show($id = null) 

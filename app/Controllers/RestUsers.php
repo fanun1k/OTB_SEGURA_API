@@ -5,7 +5,7 @@ use App\Models\UsersModel;
 use CodeIgniter\RESTful\ResourceController;
 use App\Models\TokensModel;
 
-class RestUsers extends Auth
+class RestUsers extends ResourceController
 {
     protected $modelName = 'App\Models\UsersModel';
     protected $format    = 'json';

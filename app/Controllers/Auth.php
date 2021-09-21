@@ -48,15 +48,5 @@ class Auth extends ResourceController
         }
     }
 
-    public function verifyToken(){
-        $key = Services::getSecretKey();
-        $token = $this->request->getPost("token");
-
-        if($this->validateToken($token) == false){
-            return $this->respond(['message'=>'Token Invalido'],401);
-        }else{
-            $data = JWT::decode($token,$key,array('HS256'));
-            return $this->respond(['data'=>$data],200);
-        }
-    }
+    
 }
