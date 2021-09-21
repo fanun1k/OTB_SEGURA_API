@@ -170,6 +170,23 @@ class RestUsers extends Auth
             return $this->genericResponse(null,"Token Invalido",401);
         } 
     }
+    public function SetAdmin(){
+        $user_ID=$this->request->getPost('User_ID');
+        $Jsondata=$this->request->getJSON(true);
+
+        if($Jsondata){
+
+            $user_ID=$Jsondata['User_ID'];
+        }  
+
+        $user=$this->model->find($user_ID);
+        if ($user) {
+            $this->model->update($user["User_ID"],[
+                                    "Type"=>1]);
+        }
+        return $this->genericResponse(null,'No se encontró al usuario',500);
+
+    }
 
     public function login()
     {
