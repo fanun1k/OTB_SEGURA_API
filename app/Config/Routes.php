@@ -42,6 +42,8 @@ $routes->post("restUser/login","RestUsers::login");
 $routes->resource('restUser', ['placeholder' => '(:num)', 'controller'=>'RestUsers']);
 $routes->get('restUser/byotb/(:num)', 'RestUsers::listusersbyotb/$1', );
 $routes->post('restUser/setadmin','RestUsers::SetAdmin');
+$routes->post('restUser/removeadmin','RestUsers::RemoveAdmin');
+$routes->post('restUser/removeotb','RestUsers::RemoveOTB');
 
 //Routas de JWT
 //$routes->resource('auth', ['controller' => 'Auth']);
