@@ -170,7 +170,7 @@ class RestUsers extends ResourceController
             return $this->genericResponse(null,"Token Invalido",401);
         } 
     }
-    public function SetAdmin(){
+    public function setAdmin(){
         $token = ($this->request->getHeader('Authorization')!=null)?$this->request->getHeader('Authorization')->getValue():"";
         if($this->validateToken($token)){
             $user_ID=$this->request->getPost('User_ID');
@@ -185,7 +185,11 @@ class RestUsers extends ResourceController
             if ($user) {
                 $this->model->update($user["User_ID"],[
                                         "Type"=>1]);
+<<<<<<< HEAD
                 
+=======
+                return $this->genericResponse(null,'Usuario establecido con éxito',200);                   
+>>>>>>> f0a393255fb963a377ac94fa40f3709ae9eb8b6c
             }
             return $this->genericResponse(null,'No se encontró al usuario',500);
         }else{

@@ -45,10 +45,6 @@ $routes->post('restUser/setadmin','RestUsers::SetAdmin');
 $routes->post('restUser/removeadmin','RestUsers::RemoveAdmin');
 $routes->post('restUser/removeotb','RestUsers::RemoveOTB');
 
-//Routas de JWT
-//$routes->resource('auth', ['controller' => 'Auth']);
-//$routes->resource('api/user', ['controller' => 'User']);
-
 
 $routes->POST('restOtb/joinOtb','RestOtbs::joinOtb');
 $routes->resource('restOtb',['placeholder' => '(:num)','controller'=>'RestOtbs']);
