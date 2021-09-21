@@ -208,7 +208,7 @@ class RestUsers extends ResourceController
             if ($user) {
                 $this->model->update($user["User_ID"],[
                                         "Type"=>0]);
-                return $this->genericResponse(null,'Se quito el modo de administrador',500);
+                return $this->genericResponse(null,'Se quito el modo de administrador',200);
             }
             return $this->genericResponse(null,'No se encontró al usuario',500);
         }else{
@@ -219,20 +219,22 @@ class RestUsers extends ResourceController
     public function RemoveOTB(){
         $token = ($this->request->getHeader('Authorization')!=null)?$this->request->getHeader('Authorization')->getValue():"";
         if($this->validateToken($token)){
-            $user=$this->model->find($id);
-
-            if (!$user)
-            {
-                return $this->genericResponse(null,"El usuario no existe",500);
-            }
-            
-            if  ($user['Otb_ID'] != null){
-                $this->model->update($id,[
-                    'Otb_ID'=>null
+            $user_ID=$this->request->getPost('User_ID');
+            $Jsondata=$this->request->getJSON(true);
+    
+            if($Jsondata){
+                $user_ID=$Jsondata['User_ID'];
+            }  
+    
+            $user=$this->model->find($user_ID);
+            if ($user) {
+                $this->model->update($user["User_ID"],[
+                    "Otb_ID"=>null,
+                    "Type"=> 0
                 ]);
+                return $this-> genericResponse(null,'El usuario fue removido de la OTB',200);
             }
-            
-            return $this-> genericResponse('El usuario fue removido de la OTB',null,200);   
+            return $this->genericResponse(null,'No se encontró al usuario',500);
         }else{
             return $this->genericResponse(null,"Token Invalido",401);
         }
