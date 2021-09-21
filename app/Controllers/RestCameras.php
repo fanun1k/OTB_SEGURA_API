@@ -21,23 +21,29 @@ class RestCameras extends ResourceController
 
     public function show($id = null) 
     {
-        if ($id == null) 
-        {
-            return $this->genericResponse(null,"El ID no fue encontrado",500); 
+        $token = ($this->request->getHeader('Authorization')!=null)?$this->request->getHeader('Authorization')->getValue():"";
+        if($this->validateToken($token)){
+            if ($id == null) 
+            {
+                return $this->genericResponse(null,"El ID no fue encontrado",500); 
+            }
+
+            $camera=$this->model->where('Camera_ID', $id)->findAll();
+
+            if($camera && $camera[0]['State'] == 0){
+                return $this->genericResponse(null,"La camara esta inhabilitado", 401);
+            }
+
+            if (!$camera) 
+            {
+                return $this->genericResponse(null,"La camara no existe",500); 
+            }
+
+            return $this->genericResponse($camera,"",200); 
+        }else{
+            return $this->genericResponse(null,"Token Invalido",401);
         }
-
-        $camera=$this->model->where('Camera_ID', $id)->findAll();
-
-        if($camera && $camera[0]['State'] == 0){
-            return $this->genericResponse(null,"La camara esta inhabilitado", 401);
-        }
-
-        if (!$camera) 
-        {
-            return $this->genericResponse(null,"La camara no existe",500); 
-        }
-
-        return $this->genericResponse($camera,"",200); 
+        
     }
 
     public function create(){
