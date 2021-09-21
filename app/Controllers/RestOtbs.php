@@ -2,6 +2,7 @@
 
 use App\Models\OtbsModel;
 use App\Models\UsersModel;
+use CodeIgniter\HTTP\Request;
 use CodeIgniter\RESTful\ResourceController;
 use Firebase\JWT\JWT;
 
@@ -87,7 +88,37 @@ class RestOtbs extends ResourceController
             return $this->genericResponse(null,"Token Invalido",401);
         }
     }
+    public function joinOtb(){
+        $token = ($this->request->getHeader('Authorization')!=null)?$this->request->getHeader('Authorization')->getValue():"";
+        if($this->validateToken($token)){
+            $user_ID=$this->request->getPost("User_ID");
+            $code=$this->request->getPost("Code");
+            $jsonData=$this->request->getJSON(true);
+            $userModel=new UsersModel();
 
+            if ($jsonData) {
+                $user_ID=$jsonData["User_ID"];
+                $code=$jsonData["Code"];
+            }
+            if($this->validate("joinOtb")){
+                $otb=$this->model->where(["Code"=>$code])->first();
+                if ($otb) {
+                    $user=$userModel->fin($user_ID);
+                    if ($user) {
+                        $userModel->update($user_ID,["Otb_ID"=>$otb["Otb_ID"]]);
+                        return $this->genericResponse(array($otb),null,200);
+                    }
+                    return $this->genericResponse(null,"Usuario no encontrado",500);
+                }
+                return $this->genericResponse(null,"El código noe sta asociado a ninguna OTB",500);   
+            }
+            $validation= \Config\Services::validation();
+            return $this->genericResponse(null,$validation->getErrors(),500);
+        }
+        else{
+            return $this->genericResponse(null,"Token Invalido",401);
+        }
+    }
     public function update($id=null){
 
         $token = ($this->request->getHeader('Authorization')!=null)?$this->request->getHeader('Authorization')->getValue():"";

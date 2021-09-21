@@ -170,7 +170,7 @@ class RestUsers extends ResourceController
             return $this->genericResponse(null,"Token Invalido",401);
         } 
     }
-    public function SetAdmin(){
+    public function setAdmin(){
         $token = ($this->request->getHeader('Authorization')!=null)?$this->request->getHeader('Authorization')->getValue():"";
         if($this->validateToken($token)){
             $user_ID=$this->request->getPost('User_ID');
