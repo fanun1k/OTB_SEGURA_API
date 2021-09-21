@@ -33,7 +33,7 @@ class RestAlerts extends ResourceController
             $alert=$this->model->where('Alert_ID', $id)->findAll();
     
             if($alert && $alert[0]['State'] == 0){
-                return $this->genericResponse(null,"La alerta esta inhabilitado", 401);
+                return $this->genericResponse(null,"La alerta esta inhabilitado", 500);
             }
     
             if (!$alert)
@@ -152,32 +152,6 @@ class RestAlerts extends ResourceController
             return $this->genericResponse(null,"Token Invalido",401);
         }
             
-    }
-        
-    private function genericResponse($data,$msj,$code)
-    {
-        if($code==200)
-        {
-            return $this->respond(array(
-                "Data"=>$data,
-                "Msj"=>$msj,
-                "Code"=>$code
-            ));
-        }
-        if($code==500)
-        {
-            return $this->respond(array(
-                "Msj"=>$msj,
-                "Code"=>$code
-            ));
-        }
-        if($code==401)
-        {
-            return $this->respond(array(
-                "Msj"=>$msj,
-                "Code"=>$code
-            ));
-        }
     }
     
 }
