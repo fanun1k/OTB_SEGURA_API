@@ -4,7 +4,6 @@ use App\Models\OtbsModel;
 use App\Models\UsersModel;
 use CodeIgniter\HTTP\Request;
 use CodeIgniter\RESTful\ResourceController;
-use Firebase\JWT\JWT;
 
 class RestOtbs extends ResourceController
 {
@@ -33,7 +32,7 @@ class RestOtbs extends ResourceController
             $otb=$this->model->where('Otb_ID', $id)->findAll();
 
             if($otb && $otb[0]['State'] == 0){
-                return $this->genericResponse(null,"La Otb esta inhabilitada", 401);
+                return $this->genericResponse(null,"La Otb esta inhabilitada", 500);
             }
 
             if (!$otb)
@@ -77,11 +76,7 @@ class RestOtbs extends ResourceController
                         
                     }
 
-<<<<<<< HEAD
                     return $this->genericResponse(null,'Otb Creada',200);
-=======
-                    return $this->genericResponse($res,null,200);
->>>>>>> f0a393255fb963a377ac94fa40f3709ae9eb8b6c
 
                 }else{
                     return $this->genericResponse(null,"Token Invalido",401);
@@ -178,37 +173,6 @@ class RestOtbs extends ResourceController
         
     }
         
-    private function genericResponse($data,$msj,$code)
-    {
-        if($code==200)
-        {
-            return $this->respond(array(
-                "Data"=>$data,
-                "Msj"=>$msj,
-                "Code"=>$code
-            ));
-        }
-        if($code==500)
-        {
-            return $this->respond(array(
-                "Msj"=>$msj,
-                "Code"=>$code
-            ));
-        }
-        if($code==401)
-        {
-            return $this->respond(array(
-                "Msj"=>$msj,
-                "Code"=>$code
-            ));
-        }
-        if($code==404)
-        {
-            return $this->respond(array(
-                "Msj"=>$msj,
-                "Code"=>$code
-            ));
-        }
-    }
+    
     
 }

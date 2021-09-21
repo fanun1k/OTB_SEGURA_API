@@ -31,7 +31,7 @@ class RestAlarms extends ResourceController
             $alarm=$this->model->where('Alarm_ID', $id)->findAll();
     
             if($alarm && $alarm[0]['State'] == 0){
-                return $this->genericResponse(null,"La alarma esta inhabilitado", 401);
+                return $this->genericResponse(null,"La alarma esta inhabilitado", 500);
             }
     
             if (!$alarm)
@@ -128,32 +128,6 @@ class RestAlarms extends ResourceController
             return $this-> genericResponse('La alarma fue eliminado',null,200);
         }else{
             return $this->genericResponse(null,"Token Invalido",401);
-        }
-    }
-        
-    private function genericResponse($data,$msj,$code)
-    {
-        if($code==200)
-        {
-            return $this->respond(array(
-                "Data"=>$data,
-                "Msj"=>$msj,
-                "Code"=>$code
-            ));
-        }
-        if($code==500)
-        {
-            return $this->respond(array(
-                "Msj"=>$msj,
-                "Code"=>$code
-            ));
-        }
-        if($code==401)
-        {
-            return $this->respond(array(
-                "Msj"=>$msj,
-                "Code"=>$code
-            ));
         }
     }
     

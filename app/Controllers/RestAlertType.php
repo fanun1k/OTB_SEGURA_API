@@ -32,7 +32,7 @@ class RestAlertType extends ResourceController
             $alertType=$this->model->where('Alert_type_ID', $id)->findAll();
     
             if($alertType && $alertType[0]['State'] == 0){
-                return $this->genericResponse(null,"El tipo de alerta esta inhabilitado", 401);
+                return $this->genericResponse(null,"El tipo de alerta esta inhabilitado", 500);
             }
     
             if (!$alertType) 
@@ -131,32 +131,6 @@ class RestAlertType extends ResourceController
             return $this-> genericResponse('El tipo de alerta fue eliminada',null,200);
         }else{
             return $this->genericResponse(null,"Token Invalido",401);
-        }
-    }
-        
-    private function genericResponse($data,$msj,$code)
-    {
-        if($code==200)
-        {
-            return $this->respond(array(
-                "Data"=>$data,
-                "Msj"=>$msj,
-                "Code"=>$code
-            ));
-        }
-        if($code==500)
-        {
-            return $this->respond(array(
-                "Msj"=>$msj,
-                "Code"=>$code
-            ));
-        }
-        if($code==401)
-        {
-            return $this->respond(array(
-                "Msj"=>$msj,
-                "Code"=>$code
-            ));
         }
     }
     
