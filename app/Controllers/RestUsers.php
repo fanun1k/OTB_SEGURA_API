@@ -34,7 +34,7 @@ class RestUsers extends ResourceController
             $user=$this->model->where('User_ID', $id)->findAll();
             
             if($user && $user[0]['State'] == 0){
-                return $this->genericResponse(null,"El usuario esta inhabilitado", 401);
+                return $this->genericResponse(null,"El usuario esta inhabilitado", 500);
             }
 
             if (!$user)
@@ -121,7 +121,7 @@ class RestUsers extends ResourceController
             }
             
             if($user && $user[0]['State'] == 0){
-                return $this->genericResponse(null,"El usuario esta inhabilitado", 401);
+                return $this->genericResponse(null,"El usuario esta inhabilitado", 500);
             }
             
             $data2 = $this->request->getJSON(true);
@@ -193,6 +193,53 @@ class RestUsers extends ResourceController
         }
     }
 
+    public function RemoveAdmin(){
+        $token = ($this->request->getHeader('Authorization')!=null)?$this->request->getHeader('Authorization')->getValue():"";
+        if($this->validateToken($token)){
+            $user_ID=$this->request->getPost('User_ID');
+            $Jsondata=$this->request->getJSON(true);
+    
+            if($Jsondata){
+    
+                $user_ID=$Jsondata['User_ID'];
+            }  
+    
+            $user=$this->model->find($user_ID);
+            if ($user) {
+                $this->model->update($user["User_ID"],[
+                                        "Type"=>0]);
+                return $this->genericResponse(null,'Se quito el modo de administrador',200);
+            }
+            return $this->genericResponse(null,'No se encontró al usuario',500);
+        }else{
+            return $this->genericResponse(null,"Token Invalido",401);
+        }
+    }
+
+    public function RemoveOTB(){
+        $token = ($this->request->getHeader('Authorization')!=null)?$this->request->getHeader('Authorization')->getValue():"";
+        if($this->validateToken($token)){
+            $user_ID=$this->request->getPost('User_ID');
+            $Jsondata=$this->request->getJSON(true);
+    
+            if($Jsondata){
+                $user_ID=$Jsondata['User_ID'];
+            }  
+    
+            $user=$this->model->find($user_ID);
+            if ($user) {
+                $this->model->update($user["User_ID"],[
+                    "Otb_ID"=>null,
+                    "Type"=> 0
+                ]);
+                return $this-> genericResponse(null,'El usuario fue removido de la OTB',200);
+            }
+            return $this->genericResponse(null,'No se encontró al usuario',500);
+        }else{
+            return $this->genericResponse(null,"Token Invalido",401);
+        }
+    }
+
     public function login()
     {
         $email=$this->request->getPost('Email');
@@ -246,18 +293,21 @@ class RestUsers extends ResourceController
         $validation= \Config\Services::validation();
         return $this->genericResponse(null,$validation->getErrors(),500);
     }
-    public function RecoveryPassword(){
+    public function recoveryPassword(){
         $email=$this->request->getPost("Email");
         $ci=$this->request->getPost("Ci");
+        
         $jsonData=$this->request->getJson(true);
         if ($jsonData) {
             $email=$jsonData["Email"];
             $ci=$jsonData["Ci"];
-        }
+        }   
         if($this->validate('recovery')){
+            print_r("1");
             $Userdata=$this->model
             ->where(['Email'=>$email])
-            ->first();
+            ->findAll();
+           
             if($Userdata){
                 if($ci==$Userdata['Ci']){
                     if($Userdata['State']==0){
@@ -287,34 +337,5 @@ class RestUsers extends ResourceController
         $validation= \Config\Services::validation();
         return $this->genericResponse(null,$validation->getErrors(),500);
 
-    }
- 
-    private function genericResponse($data,$msj,$code)
-    {
-        if($code==200)
-        {
-            /*return json_encode(array('data'=>$data,
-                                'code'=>$code));*/
-            return $this->respond(array(
-                "Data"=>$data,
-                "Msj" => $msj,
-                "Code"=>$code
-            ));
-        }
-        if($code==500)
-        {
-            return $this->respond(array(
-                "Msj"=>$msj,
-                "Code"=>$code
-            ));
-        }
-        if($code==401)
-        {
-            return $this->respond(array(
-                "Msj"=>$msj,
-                "Code"=>$code
-            ));
-        }
-    }
-    
+    }   
 }

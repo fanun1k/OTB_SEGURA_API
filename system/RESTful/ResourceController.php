@@ -114,7 +114,7 @@ class ResourceController extends BaseResource
 		}
 	}
 
-	public function createJWT($email, $password)
+	protected function createJWT($email, $password)
 	{
 		/**
 		 * JWT claim types
@@ -144,12 +144,45 @@ class ResourceController extends BaseResource
 		return $this->respond(['message' => 'Invalid login details'], 401);
 	}
 
-    public function validateToken($token){
+    protected function validateToken($token){
         try {
             $key = Services::getSecretKey();
             return JWT::decode($token,$key,array('HS256'));
         } catch (\Exception $e) {
             return false;
+        }
+    }
+
+	protected function genericResponse($data,$msj,$code)
+    {
+        if($code==200)
+        {
+            return $this->respond(array(
+                "Data"=>$data,
+                "Msj"=>$msj,
+                "Code"=>$code
+            ));
+        }
+        if($code==500)
+        {
+            return $this->respond(array(
+                "Msj"=>$msj,
+                "Code"=>$code
+            ));
+        }
+        if($code==401)
+        {
+            return $this->respond(array(
+                "Msj"=>$msj,
+                "Code"=>$code
+            ));
+        }
+        if($code==404)
+        {
+            return $this->respond(array(
+                "Msj"=>$msj,
+                "Code"=>$code
+            ));
         }
     }
 
