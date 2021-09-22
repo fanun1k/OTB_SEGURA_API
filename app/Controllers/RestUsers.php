@@ -4,7 +4,6 @@ use App\Models\OtbsModel;
 use App\Models\UsersModel;
 use CodeIgniter\RESTful\ResourceController;
 use App\Models\TokensModel;
-
 class RestUsers extends ResourceController
 {
     protected $modelName = 'App\Models\UsersModel';
@@ -262,7 +261,7 @@ class RestUsers extends ResourceController
             if($Userdata){
                 if(md5($password)==$Userdata['Password']){
                     if($Userdata['State']==0){
-                        return $this-> genericResponse(null,'Cuenta de usuario inhabilitada',500);
+                        return $this-> genericResponse(null,'Cuenta de usuario inhabilitado',500);
                     }
     
                     $tokenModel = new TokensModel();
@@ -303,35 +302,32 @@ class RestUsers extends ResourceController
             $ci=$jsonData["Ci"];
         }   
         if($this->validate('recovery')){
-            print_r("1");
             $Userdata=$this->model
             ->where(['Email'=>$email])
-            ->findAll();
+            ->first();
            
             if($Userdata){
                 if($ci==$Userdata['Ci']){
                     if($Userdata['State']==0){
-                        return $this-> genericResponse(null,'Cuenta de usuario inhabilitada',500);
+                        return $this-> genericResponse(null,'Cuenta de usuario inhabilitado',500);
                     }
                      //restaurar contraseña
-                     $permitted_chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-                     $newPass=substr(str_shuffle($permitted_chars), 0, 10);
-                    $to = $email;
-                    $subject = "Restauración de contraseña OTB SEGURA";
-                    $message = "su contraseña fue restablecida correctamente, su nueva contraseña es: " . $newPass;
-                    $headers = "From: emergencyproject2@gmail.com" . "\r\n" . "CC: destinatarioencopia@email.com";
-
-                    mail($to, $subject, $message, $headers);
-
-                   
-                    return $this-> genericResponse(null,"Se le enviará un correo con su nueva contraseña",200);
-                }
+                    $permitted_chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+                    $newPass=substr(str_shuffle($permitted_chars), 0, 10);
+                        
+                        $id=$this->model->update($Userdata["User_ID"],["Password"=>md5($newPass)]);
+                        print_r($id);
+                        if($id)  {
+                            return $this-> genericResponse(null,"Se le envió un correo con su nueva contraseña",200);
+                        }
+                        return $this-> genericResponse(null,"Error al intentar cambiar la contraseña",200);
+                    }
                 else{
                     return $this-> genericResponse(null,'Los datos no coinciden con ninguna cuenta',500);
                 }
             }
             else{
-                return $this-> genericResponse(null,'Los datos no coinciden con ninguna cuenta',500); 
+                return $this-> genericResponse(null,'Correo inexistente',500); 
             }
         }
         $validation= \Config\Services::validation();
