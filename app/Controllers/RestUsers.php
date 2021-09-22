@@ -215,7 +215,7 @@ class RestUsers extends ResourceController
             if($Userdata){
                 if(md5($password)==$Userdata['Password']){
                     if($Userdata['State']==0){
-                        return $this-> genericResponse(null,'Cuenta de usuario inhabilitada',401);
+                        return $this-> genericResponse(null,'Cuenta de usuario inhabilitada',500);
                     }
     
                     $tokenModel = new TokensModel();
@@ -236,17 +236,58 @@ class RestUsers extends ResourceController
                     return $this-> genericResponse(array($Userdata),null,200);
                 }
                 else{
-                    return $this-> genericResponse(null,'Contraseña incorrecta',401);
+                    return $this-> genericResponse(null,'Contraseña incorrecta',500);
                 }
             }
             else{
-                return $this-> genericResponse(null,'Usuario no registrado',401); 
+                return $this-> genericResponse(null,'Usuario no registrado',500); 
             }
         }
         $validation= \Config\Services::validation();
         return $this->genericResponse(null,$validation->getErrors(),500);
     }
+    public function RecoveryPassword(){
+        $email=$this->request->getPost("Email");
+        $ci=$this->request->getPost("Ci");
+        $jsonData=$this->request->getJson(true);
+        if ($jsonData) {
+            $email=$jsonData["Email"];
+            $ci=$jsonData["Ci"];
+        }
+        if($this->validate('recovery')){
+            $Userdata=$this->model
+            ->where(['Email'=>$email])
+            ->first();
+            if($Userdata){
+                if($ci==$Userdata['Ci']){
+                    if($Userdata['State']==0){
+                        return $this-> genericResponse(null,'Cuenta de usuario inhabilitada',500);
+                    }
+                     //restaurar contraseña
+                     $permitted_chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+                     $newPass=substr(str_shuffle($permitted_chars), 0, 10);
+                    $to = $email;
+                    $subject = "Restauración de contraseña OTB SEGURA";
+                    $message = "su contraseña fue restablecida correctamente, su nueva contraseña es: " . $newPass;
+                    $headers = "From: emergencyproject2@gmail.com" . "\r\n" . "CC: destinatarioencopia@email.com";
 
+                    mail($to, $subject, $message, $headers);
+
+                   
+                    return $this-> genericResponse(null,"Se le enviará un correo con su nueva contraseña",200);
+                }
+                else{
+                    return $this-> genericResponse(null,'Los datos no coinciden con ninguna cuenta',500);
+                }
+            }
+            else{
+                return $this-> genericResponse(null,'Los datos no coinciden con ninguna cuenta',500); 
+            }
+        }
+        $validation= \Config\Services::validation();
+        return $this->genericResponse(null,$validation->getErrors(),500);
+
+    }
  
     private function genericResponse($data,$msj,$code)
     {

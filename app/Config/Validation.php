@@ -76,6 +76,9 @@ class Validation
 		'Email' => 'required|min_length[6]|max_length[35]',
 		'Password' => 'required|min_length[5]|max_length[60]'
 	];
+	public $recovery=[
+		'Email' => 'required|min_length[6]|max_length[35]',
+	];
 
 	public $otbsInsert=[
 		'Name'=>'required|min_length[5]|max_length[100]',
