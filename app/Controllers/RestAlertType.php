@@ -29,7 +29,8 @@ class RestAlertType extends ResourceController
                 return $this->genericResponse(null,"El ID no fue encontrado",500); 
             }
     
-            $alertType=$this->model->where('Alert_type_ID', $id)->findAll();
+            $alertType=$this->model->where('Otb_ID', $id);
+            $alertType = $alertType->where('State', 1)->findAll();
     
             if($alertType && $alertType[0]['State'] == 0){
                 return $this->genericResponse(null,"El tipo de alerta esta inhabilitado", 500);

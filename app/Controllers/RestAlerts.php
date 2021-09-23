@@ -30,7 +30,8 @@ class RestAlerts extends ResourceController
                 return $this->genericResponse(null,"El ID no fue encontrado",500);
             }
     
-            $alert=$this->model->where('Alert_ID', $id)->findAll();
+            $alert=$this->model->where('Otb_ID', $id);
+            $alert = $alert->where('State', 1)->findAll();
     
             if($alert && $alert[0]['State'] == 0){
                 return $this->genericResponse(null,"La alerta esta inhabilitado", 500);
