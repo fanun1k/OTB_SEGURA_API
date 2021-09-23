@@ -11,7 +11,7 @@ class RestAlertType extends ResourceController
     
     public function index()
     {
-        $token = ($this->request->getHeader('Authorization')!=null)?$this->request->getHeader('Authorization')->getValue():"";
+        $token = ($this->request->header('Authorization')!=null)?$this->request->header('Authorization')->getValue():"";
         if($this->validateToken($token)){
             return $this->genericResponse($this->model->where('State', 1)->findAll(),"",200);
         }else{
@@ -22,14 +22,15 @@ class RestAlertType extends ResourceController
 
     public function show($id = null) 
     {
-        $token = ($this->request->getHeader('Authorization')!=null)?$this->request->getHeader('Authorization')->getValue():"";
+        $token = ($this->request->header('Authorization')!=null)?$this->request->header('Authorization')->getValue():"";
         if($this->validateToken($token)){
             if ($id == null) 
             {
                 return $this->genericResponse(null,"El ID no fue encontrado",500); 
             }
     
-            $alertType=$this->model->where('Alert_type_ID', $id)->findAll();
+            $alertType=$this->model->where('Otb_ID', $id);
+            $alertType = $alertType->where('State', 1)->findAll();
     
             if($alertType && $alertType[0]['State'] == 0){
                 return $this->genericResponse(null,"El tipo de alerta esta inhabilitado", 500);
@@ -49,7 +50,7 @@ class RestAlertType extends ResourceController
 
     public function create(){
 
-        $token = ($this->request->getHeader('Authorization')!=null)?$this->request->getHeader('Authorization')->getValue():"";
+        $token = ($this->request->header('Authorization')!=null)?$this->request->header('Authorization')->getValue():"";
         if($this->validateToken($token)){
             $otbModel=new OtbsModel();
 
@@ -85,7 +86,7 @@ class RestAlertType extends ResourceController
     
     public function update($id=null){
 
-        $token = ($this->request->getHeader('Authorization')!=null)?$this->request->getHeader('Authorization')->getValue():"";
+        $token = ($this->request->header('Authorization')!=null)?$this->request->header('Authorization')->getValue():"";
         if($this->validateToken($token)){
             $data=$this->request->getRawInput();
             $alertType=$this->model->find($id);
@@ -114,7 +115,7 @@ class RestAlertType extends ResourceController
     }
 
     public function delete($id=null){ 
-        $token = ($this->request->getHeader('Authorization')!=null)?$this->request->getHeader('Authorization')->getValue():"";
+        $token = ($this->request->header('Authorization')!=null)?$this->request->header('Authorization')->getValue():"";
         if($this->validateToken($token)){
             $alertType=$this->model->find($id); 
 

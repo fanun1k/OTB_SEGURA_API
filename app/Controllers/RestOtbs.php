@@ -12,7 +12,7 @@ class RestOtbs extends ResourceController
     
     public function index()
     {
-        $token = ($this->request->getHeader('Authorization')!=null)?$this->request->getHeader('Authorization')->getValue():"";
+        $token = ($this->request->header('Authorization')!=null)?$this->request->header('Authorization')->getValue():"";
         if($this->validateToken($token)){
             return $this->genericResponse($this->model->where('State', 1)->findAll(),"",200);
         }else{
@@ -22,7 +22,7 @@ class RestOtbs extends ResourceController
 
     public function show($id = null) 
     {
-        $token = ($this->request->getHeader('Authorization')!=null)?$this->request->getHeader('Authorization')->getValue():"";
+        $token = ($this->request->header('Authorization')!=null)?$this->request->header('Authorization')->getValue():"";
         if($this->validateToken($token)){
             if ($id == null) 
             {
@@ -48,9 +48,8 @@ class RestOtbs extends ResourceController
 
     public function create(){ 
 
-        $token = ($this->request->getHeader('Authorization')!=null)?$this->request->getHeader('Authorization')->getValue():"";
+        $token = ($this->request->header('Authorization')!=null)?$this->request->header('Authorization')->getValue():"";
         if($this->validateToken($token)){
-            $token = ($this->request->getHeader('Authorization')!=null)?$this->request->getHeader('Authorization')->getValue():"";
             $otbModel =new OtbsModel();
             $userModel=new UsersModel();      
             $data = array('Name' => $this->request->getPost('Name'),
@@ -62,23 +61,20 @@ class RestOtbs extends ResourceController
             }
 
             if($this->validate('otbsInsert')){
-                if($this->validateToken($token)){
-                    $existe=$userModel->find($data["User_ID"]);
-                
-                    if(!$existe){ 
-                        return $this->genericResponse(null,"ID de usuario no encontrado",404);
-                    }
-                    $permitted_chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-                    $res=$otbModel->InsertOtb($data["User_ID"],["Name"=>$data["Name"],"Code"=>substr(str_shuffle($permitted_chars), 0, 8)]);
-                
-                    if(!$res){               
-                        return $this->genericResponse(null,"Error en la transacción",500);
-                    }
-                    return $this->genericResponse($res,null,200);
-
-                    }else{
-                    return $this->genericResponse(null,"Token Invalido",401);
+                $existe=$userModel->find($data["User_ID"]);
+            
+                if(!$existe){ 
+                    return $this->genericResponse(null,"ID de usuario no encontrado",404);
                 }
+                $permitted_chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+                $res=$otbModel->InsertOtb($data["User_ID"],["Name"=>$data["Name"],"Code"=>substr(str_shuffle($permitted_chars), 0, 8)]);
+            
+                if(!$res){               
+                    return $this->genericResponse(null,"Error en la transacción",500);
+
+                }
+
+                return $this->genericResponse($res,null,200);
             }
 
             $validation= \Config\Services::validation();
@@ -88,7 +84,7 @@ class RestOtbs extends ResourceController
         }
     }
     public function joinOtb(){
-        $token = ($this->request->getHeader('Authorization')!=null)?$this->request->getHeader('Authorization')->getValue():"";
+        $token = ($this->request->header('Authorization')!=null)?$this->request->header('Authorization')->getValue():"";
         if($this->validateToken($token)){
             $user_ID=$this->request->getPost("User_ID");
             $code=$this->request->getPost("Code");
@@ -102,7 +98,7 @@ class RestOtbs extends ResourceController
             if($this->validate("joinOtb")){
                 $otb=$this->model->where(["Code"=>$code])->first();
                 if ($otb) {
-                    $user=$userModel->fin($user_ID);
+                    $user=$userModel->find($user_ID);
                     if ($user) {
                         $userModel->update($user_ID,["Otb_ID"=>$otb["Otb_ID"]]);
                         return $this->genericResponse(array($otb),null,200);
@@ -120,7 +116,7 @@ class RestOtbs extends ResourceController
     }
     public function update($id=null){
 
-        $token = ($this->request->getHeader('Authorization')!=null)?$this->request->getHeader('Authorization')->getValue():"";
+        $token = ($this->request->header('Authorization')!=null)?$this->request->header('Authorization')->getValue():"";
         if($this->validateToken($token)){
             $data=$this->request->getRawInput();
             $otb=$this->model->find($id);
@@ -149,7 +145,7 @@ class RestOtbs extends ResourceController
 
     public function delete($id=null){ 
 
-        $token = ($this->request->getHeader('Authorization')!=null)?$this->request->getHeader('Authorization')->getValue():"";
+        $token = ($this->request->header('Authorization')!=null)?$this->request->header('Authorization')->getValue():"";
         if($this->validateToken($token)){
             $otb=$this->model->find($id); 
 

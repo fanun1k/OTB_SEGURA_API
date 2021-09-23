@@ -11,7 +11,7 @@ class RestCameras extends ResourceController
     
     public function index()
     {
-        $token = ($this->request->getHeader('Authorization')!=null)?$this->request->getHeader('Authorization')->getValue():"";
+        $token = ($this->request->header('Authorization')!=null)?$this->request->header('Authorization')->getValue():"";
         if($this->validateToken($token)){
             return $this->genericResponse($this->model->where('State', 1)->findAll(),"",200);
         }else{
@@ -21,7 +21,7 @@ class RestCameras extends ResourceController
 
     public function show($id = null) 
     {
-        $token = ($this->request->getHeader('Authorization')!=null)?$this->request->getHeader('Authorization')->getValue():"";
+        $token = ($this->request->header('Authorization')!=null)?$this->request->header('Authorization')->getValue():"";
         if($this->validateToken($token)){
             if ($id == null) 
             {
@@ -48,7 +48,7 @@ class RestCameras extends ResourceController
 
     public function create(){
 
-        $token = ($this->request->getHeader('Authorization')!=null)?$this->request->getHeader('Authorization')->getValue():"";
+        $token = ($this->request->header('Authorization')!=null)?$this->request->header('Authorization')->getValue():"";
         if($this->validateToken($token)){
             $otbModel=new OtbsModel();
 
@@ -82,7 +82,7 @@ class RestCameras extends ResourceController
     }
     
     public function update($id=null){
-        $token = ($this->request->getHeader('Authorization')!=null)?$this->request->getHeader('Authorization')->getValue():"";
+        $token = ($this->request->header('Authorization')!=null)?$this->request->header('Authorization')->getValue():"";
         if($this->validateToken($token)){
             $data=$this->request->getRawInput();
             $camera=$this->model->find($id);
@@ -111,7 +111,7 @@ class RestCameras extends ResourceController
 
     public function delete($id=null){ 
 
-        $token = ($this->request->getHeader('Authorization')!=null)?$this->request->getHeader('Authorization')->getValue():"";
+        $token = ($this->request->header('Authorization')!=null)?$this->request->header('Authorization')->getValue():"";
         if($this->validateToken($token)){
             $camera=$this->model->find($id); 
 
