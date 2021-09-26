@@ -291,7 +291,6 @@ class RestUsers extends ResourceController
         $validation= \Config\Services::validation();
         return $this->genericResponse(null,$validation->getErrors(),500);
     }
-}
     public function recoveryPassword(){
         $email=$this->request->getPost("Email");
         $ci=$this->request->getPost("Ci");
