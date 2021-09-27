@@ -336,18 +336,17 @@ class RestUsers extends ResourceController
 
     public function uploadfile(){
         $id = $this->request->getPost('User_ID');
-        $img = $this->request->getFile('profile');
-        if ($img)
-            print("Hay algo" . $id);
-
-        $profile_image = $img->getName();
-        print($profile_image);
-        // Renaming file before upload
-        $temp = explode(".",$profile_image);
-        $newfilename = $id . '.' . end($temp);
+        $img = $this->request->getFile('Profile');
         
-        if ($img->move("./uploads/", $newfilename)){
-            return $this->genericResponse(null,'Imagen ingresada', 200);
+        if($this->validate('usersUploadProfile')){
+            $newfilename = $id . '.png';
+            
+            if ($img->move("./uploads/", $newfilename, true)){
+                return $this->genericResponse(null,'Imagen ingresada', 200);
+            }
         }
+        $validation= \Config\Services::validation();
+        return $this->genericResponse(null,$validation->getErrors(),500);
+        
     }
 }
