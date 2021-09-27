@@ -47,6 +47,7 @@ $routes->post('restUser/removeadmin','RestUsers::RemoveAdmin');
 $routes->post('restUser/removeotb','RestUsers::RemoveOTB');
 $routes->POST('restOtb/joinOtb','RestOtbs::joinOtb');
 $routes->resource('restOtb',['placeholder' => '(:num)','controller'=>'RestOtbs']);
+$routes->post('restUser/upload', 'RestUsers::uploadfile');
 
 /*
  * --------------------------------------------------------------------

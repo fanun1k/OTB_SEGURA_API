@@ -333,4 +333,20 @@ class RestUsers extends ResourceController
         return $this->genericResponse(null,$validation->getErrors(),500);
 
     }   
+
+    public function uploadfile(){
+        $id = $this->request->getPost('User_ID');
+        $img = $this->request->getFile('Profile');
+        
+        if($this->validate('usersUploadProfile')){
+            $newfilename = $id . '.png';
+            
+            if ($img->move("./uploads/", $newfilename, true)){
+                return $this->genericResponse(null,'Imagen ingresada', 200);
+            }
+        }
+        $validation= \Config\Services::validation();
+        return $this->genericResponse(null,$validation->getErrors(),500);
+        
+    }
 }
