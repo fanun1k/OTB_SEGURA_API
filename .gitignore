@@ -119,6 +119,7 @@ nb-configuration.xml
 /api/
 
 app/Config/Database.php 
+uploads/*
 # Visual Studio Code
 .vscode/
 
