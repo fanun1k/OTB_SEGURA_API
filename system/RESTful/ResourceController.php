@@ -12,6 +12,8 @@
 namespace CodeIgniter\RESTful;
 
 use CodeIgniter\API\ResponseTrait;
+use Config\Services;
+use Firebase\JWT\JWT;
 /**
  * An extendable controller to provide a RESTful API for a resource.
  */
@@ -111,4 +113,77 @@ class ResourceController extends BaseResource
 			$this->format = $format;
 		}
 	}
+
+	protected function createJWT($email, $password)
+	{
+		/**
+		 * JWT claim types
+		 * https://auth0.com/docs/tokens/concepts/jwt-claims#reserved-claims
+		 */
+
+		// add code to fetch through db and check they are valid
+		// sending no email and password also works here because both are empty
+		if ($email != null && $password != null) {
+			$key = Services::getSecretKey();
+			$payload = [
+                'iat' => getdate(time()),
+				'data' => ['Email' => $email, 'Password' => $password],
+			];
+
+			/**
+			 * IMPORTANT:
+			 * You must specify supported algorithms for your application. See
+			 * https://tools.ietf.org/html/draft-ietf-jose-json-web-algorithms-40
+			 * for a list of spec-compliant algorithms.
+			 */
+			$jwt = JWT::encode($payload, $key);
+			return $jwt;
+			//return $jwt;
+		}
+
+		return $this->respond(['message' => 'Invalid login details'], 401);
+	}
+
+    protected function validateToken($token){
+        try {
+            $key = Services::getSecretKey();
+            return JWT::decode($token,$key,array('HS256'));
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+	protected function genericResponse($data,$msj,$code)
+    {
+        if($code==200)
+        {
+            return $this->respond(array(
+                "Data"=>$data,
+                "Msj"=>$msj,
+                "Code"=>$code
+            ));
+        }
+        if($code==500)
+        {
+            return $this->respond(array(
+                "Msj"=>$msj,
+                "Code"=>$code
+            ));
+        }
+        if($code==401)
+        {
+            return $this->respond(array(
+                "Msj"=>$msj,
+                "Code"=>$code
+            ));
+        }
+        if($code==404)
+        {
+            return $this->respond(array(
+                "Msj"=>$msj,
+                "Code"=>$code
+            ));
+        }
+    }
+
 }

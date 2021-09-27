@@ -35,6 +35,20 @@ $routes->setAutoRoute(true);
 $routes->get('/', 'Home::index');
 
 $routes->resource('restAlertType',['controller'=>'RestAlertType']);
+$routes->resource('restAlert',['controller'=>'RestAlerts']);
+$routes->resource('restAlarm',['controller'=>'RestAlarms']);
+$routes->resource('restCamera',['controller' => 'RestCameras']);
+$routes->post("restUser/login","RestUsers::login");
+$routes->post('restUser/recoverypass','RestUsers::recoveryPassword');
+$routes->resource('restUser', ['placeholder' => '(:num)', 'controller'=>'RestUsers']);
+$routes->get('restUser/byotb/(:num)', 'RestUsers::listusersbyotb/$1', );
+$routes->post('restUser/setadmin','RestUsers::SetAdmin');
+$routes->post('restUser/removeadmin','RestUsers::RemoveAdmin');
+$routes->post('restUser/removeotb','RestUsers::RemoveOTB');
+$routes->POST('restOtb/joinOtb','RestOtbs::joinOtb');
+$routes->resource('restOtb',['placeholder' => '(:num)','controller'=>'RestOtbs']);
+$routes->post('restUser/upload', 'RestUsers::uploadfile');
+
 /*
  * --------------------------------------------------------------------
  * Additional Routing
