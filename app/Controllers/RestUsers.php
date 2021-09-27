@@ -4,6 +4,9 @@ use App\Models\OtbsModel;
 use App\Models\UsersModel;
 use CodeIgniter\RESTful\ResourceController;
 use App\Models\TokensModel;
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+require 'vendor/autoload.php';
 class RestUsers extends ResourceController
 {
     protected $modelName = 'App\Models\UsersModel';
@@ -315,11 +318,34 @@ class RestUsers extends ResourceController
                     $newPass=substr(str_shuffle($permitted_chars), 0, 10);
                         
                         $id=$this->model->update($Userdata["User_ID"],["Password"=>md5($newPass)]);
-                        print_r($id);
                         if($id)  {
-                            return $this-> genericResponse(null,"Se le envió un correo con su nueva contraseña",200);
+                            $mail = new PHPMailer(true);                              // Passing `true` enables exceptions
+                            try {
+                                //Server settings
+                                $mail->SMTPDebug = 2;                                 // Enable verbose debug output
+                                $mail->isSMTP();                                      // Set mailer to use SMTP
+                                $mail->Host = 'smtp.gmail.com';                       // Specify main and backup SMTP servers
+                                $mail->SMTPAuth = true;                               // Enable SMTP authentication
+                                $mail->Username = 'emergencyproject2@gmail.com';                // SMTP username
+                                $mail->Password = 'proyecto2021';                           // SMTP password
+                                $mail->SMTPSecure = 'ssl';                            // Enable SSL encryption, TLS also accepted with port 587
+                                $mail->Port = 465;                                    // TCP port to connect to
+                            
+                                //Recipients
+                                $mail->setFrom('emergencyproject2@gmail.com', 'OTB SEGURA');
+                                $mail->addAddress($email);     // Add a recipient
+                                //Content
+                                $mail->isHTML(true);                               // Set email format to HTML
+                                $mail->Subject = 'Restaurar Contraseña';
+                                $mail->Body    = 'Su contraseña fue restaurada correctamente, su nueva contraseña es: '.$newPass;
+                            
+                                $mail->send();
+                                return $this-> genericResponse(null,"Se le envió un correo con su nueva contraseña",200);
+                            } catch (Exception $e) {
+                                return $this-> genericResponse(null,$mail->ErrorInfo,500);
+                            }                           
                         }
-                        return $this-> genericResponse(null,"Error al intentar cambiar la contraseña",200);
+                        return $this-> genericResponse(null,"Error al intentar cambiar la contraseña",500);
                     }
                 else{
                     return $this-> genericResponse(null,'Los datos no coinciden con ninguna cuenta',500);
@@ -331,6 +357,7 @@ class RestUsers extends ResourceController
         }
         $validation= \Config\Services::validation();
         return $this->genericResponse(null,$validation->getErrors(),500);
+ 
 
     }   
 
