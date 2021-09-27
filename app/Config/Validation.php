@@ -66,6 +66,11 @@ class Validation
 		'Ci' => 'required|min_length[6]|max_length[15]'
 	];
 
+	public $usersUploadProfile=[
+		'User_ID' => 'required|min_length[1]',
+		'Profile' => 'uploaded[Profile]|is_image[Profile]'
+	];
+
 	public $usersUpdate=[
 		'Name'=>'required|min_length[3]|max_length[100]',
 		'Password'=>'required|min_length[5]|max_length[35]',
