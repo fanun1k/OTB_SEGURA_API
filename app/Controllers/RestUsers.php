@@ -186,7 +186,7 @@ class RestUsers extends ResourceController
             if ($user) {
                 $this->model->update($user["User_ID"],[
                                         "Type"=>1]);
-                return $this->genericResponse(null,'Usuario establecido con éxito',200);                   
+                return $this->genericResponse(null,'Usuario establecido con éxito',200);
             }
             return $this->genericResponse(null,'No se encontró al usuario',500);
         }else{
@@ -365,7 +365,6 @@ class RestUsers extends ResourceController
                                                         
                                 // Specify the message recipients.
                                 $mail->addAddress($email);
-                                // You can also add CC, BCC, and additional To recipients here.
                             
                                 // Specify the content of the message.
                                 $mail->isHTML(true);
