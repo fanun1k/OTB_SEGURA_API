@@ -28,15 +28,12 @@ class RestCameras extends ResourceController
                 return $this->genericResponse(null,"El ID no fue encontrado",500); 
             }
 
-            $camera=$this->model->where('Camera_ID', $id)->findAll();
+            $camera=$this->model->where('Otb_ID', $id);
+            $camera=$camera->where('State', 1)->findAll();
 
-            if($camera && $camera[0]['State'] == 0){
-                return $this->genericResponse(null,"La camara esta inhabilitado", 500);
-            }
-
-            if (!$camera) 
+            if (!$camera)
             {
-                return $this->genericResponse(null,"La camara no existe",500); 
+                return $this->genericResponse(null,"La OTB no existe",500); 
             }
 
             return $this->genericResponse($camera,"",200); 
