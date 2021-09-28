@@ -134,7 +134,7 @@ class RestUsers extends ResourceController
 
                 $userModel = $this->model->update($id,[
                     'Name'=>$data['Name'],
-                    'Password'=>$data['Password'],
+                    'Password'=>md5($data['Password']),
                     'Cell_phone'=>$data['Cell_phone']
                 ]);
                 
