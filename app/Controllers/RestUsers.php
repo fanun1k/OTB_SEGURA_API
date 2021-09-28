@@ -320,26 +320,57 @@ class RestUsers extends ResourceController
                         $id=$this->model->update($Userdata["User_ID"],["Password"=>md5($newPass)]);
                         if($id)  {
                             $mail = new PHPMailer(true);                              // Passing `true` enables exceptions
+
+                                // Replace sender@example.com with your "From" address.
+                                // This address must be verified with Amazon SES.
+                                $sender = 'emergencyproject2@gmail.com';
+                                $senderName = 'OTB SEGURA';
+
+                                // Replace smtp_username with your Amazon SES SMTP user name.
+                                $usernameSmtp = 'AKIAQPXAFAEEYSPOYW43';
+
+                                // Replace smtp_password with your Amazon SES SMTP password.
+                                $passwordSmtp = 'BE03Uidif8Iez17KJNLe8VMCxkSsGLNHplcDh1S4H8/J';
+
+                                // Specify a configuration set. If you do not want to use a configuration
+                                // set, comment or remove the next line.
+                               
+
+                                // If you're using Amazon SES in a region other than US West (Oregon),
+                                // replace email-smtp.us-west-2.amazonaws.com with the Amazon SES SMTP
+                                // endpoint in the appropriate region.
+                                $host = 'email-smtp.us-east-2.amazonaws.com';
+                                $port = 587;
+
+                                // The subject line of the email
+                                $subject = 'OTB SEGURA';
+
+                            
+
+                                // The HTML-formatted body of the email
+                                $bodyHtml = '<h1>Restaurar contraseña</h1>
+                                    <p>"Su contraseña fue restaurada, su nueva contraseña es: '.$newPass. '"</p>';
+
+                                $mail = new PHPMailer(true);
                             try {
                                 //Server settings
-                                $mail->SMTPDebug = 1;                                 // Enable verbose debug output
-                                $mail->isSMTP();                                      // Set mailer to use SMTP
-                                $mail->Host = 'smtp.gmail.com';                       // Specify main and backup SMTP servers
-                                $mail->SMTPAuth = true;                               // Enable SMTP authentication
-                                $mail->Username = 'emergencyproject2@gmail.com';                // SMTP username
-                                $mail->Password = 'proyecto2021';                           // SMTP password
-                                $mail->SMTPSecure = 'ssl';                            // Enable SSL encryption, TLS also accepted with port 587
-                                $mail->Port =465 ;                                    // TCP port to connect to
+                                $mail->isSMTP();
+                                $mail->setFrom($sender, $senderName);
+                                $mail->Username   = $usernameSmtp;
+                                $mail->Password   = $passwordSmtp;
+                                $mail->Host       = $host;
+                                $mail->Port       = $port;
+                                $mail->SMTPAuth   = true;
+                                $mail->SMTPSecure = 'tls';
+                                                        
+                                // Specify the message recipients.
+                                $mail->addAddress($email);
                             
-                                //Recipients
-                                $mail->setFrom('emergencyproject2@gmail.com', 'OTB SEGURA');
-                                $mail->addAddress($email);     // Add a recipient
-                                //Content
-                                $mail->isHTML(true);                               // Set email format to HTML
-                                $mail->Subject = 'Restaurar Contraseña';
-                                $mail->Body    = 'Su contraseña fue restaurada correctamente, su nueva contraseña es: '.$newPass;
-                            
-                                $mail->send();
+                                // Specify the content of the message.
+                                $mail->isHTML(true);
+                                $mail->Subject    = $subject;
+                                $mail->Body       = $bodyHtml;
+                                $mail->Send();
                                 return $this-> genericResponse(null,"Se le envió un correo con su nueva contraseña",200);
                             } catch (Exception $e) {
                                 return $this-> genericResponse(null,$mail->ErrorInfo,500);
