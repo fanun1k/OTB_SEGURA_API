@@ -138,7 +138,7 @@ class RestUsers extends ResourceController
                     'Cell_phone'=>$data['Cell_phone']
                 ]);
                 
-                return $this-> genericResponse(null,"Usuario modificado",200);
+                return $this-> genericResponse(array(["Name"=>$data["Name"],"Cell_phone"=>$data["Cell_phone"]]),"Usuario modificado",200);
             }
         
             $validation= \Config\Services::validation();
