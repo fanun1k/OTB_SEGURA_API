@@ -71,7 +71,7 @@ class RestOtbs extends ResourceController
             
                 if(!$res){               
                     return $this->genericResponse(null,"Error en la transacción",500);
-                    
+
                 }
 
                 return $this->genericResponse($res,null,200);
