@@ -60,7 +60,7 @@ class RestAlerts extends ResourceController
     
             $alert=$this->model->where('Otb_ID', $id);
             $alert = $alert->where('State', 1)->findAll();
-            $alert=$alert->where('User_ID',$idus).findAll();
+            $alert=$alert->where('User_ID',$idus)->findAll();
             if (!$alert)
             {
                 return $this->genericResponse(null,"No se encontraron alertas",500);
