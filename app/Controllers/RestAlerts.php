@@ -33,13 +33,9 @@ class RestAlerts extends ResourceController
             $alert=$this->model->where('Otb_ID', $id);
             $alert = $alert->where('State', 1)->findAll();
     
-            if($alert && $alert[0]['State'] == 0){
-                return $this->genericResponse(null,"La alerta esta inhabilitado", 500);
-            }
-    
             if (!$alert)
             {
-                return $this->genericResponse(null,"La alerta no existe",500);
+                return $this->genericResponse(null,"La OTB no existe",500);
             }
     
             return $this->genericResponse($alert,"",200);
