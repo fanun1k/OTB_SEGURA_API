@@ -44,6 +44,33 @@ class RestAlerts extends ResourceController
         }
     }
 
+    public function alertsByUser($id = null,$idus=null)
+    {
+        $token = ($this->request->header('Authorization')!=null)?$this->request->header('Authorization')->getValue():"";
+
+        if($this->validateToken($token)){
+            if ($id == null && $idus==null)
+            {
+                return $this->genericResponse(null,"El ID no fue encontrado",500);
+            }
+            if($this->validate('alertsInsert')){
+                $alert=$this->model->where('Otb_ID', $id);
+                $alert = $alert->where('State', 1)->findAll();
+                $alert=$alert->where('User_ID',$idus).findAll();
+                if (!$alert)
+                {
+                    return $this->genericResponse(null,"No se encontraron alertas",500);
+                }
+                return $this->genericResponse($alert,null,200);
+            }
+            $validation= \Config\Services::validation();
+            return $this->genericResponse(null,$validation->getErrors(),500);
+        }else{
+            return $this->genericResponse(null,"Token Invalido",401);
+        }
+    }
+
+
     public function create(){
         $token = ($this->request->header('Authorization')!=null)?$this->request->header('Authorization')->getValue():"";
         if($this->validateToken($token)){
