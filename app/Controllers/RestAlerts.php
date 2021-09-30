@@ -33,9 +33,13 @@ class RestAlerts extends ResourceController
             $alert=$this->model->where('Otb_ID', $id);
             $alert = $alert->where('State', 1)->findAll();
     
+            if($alert && $alert[0]['State'] == 0){
+                return $this->genericResponse(null,"La alerta esta inhabilitado", 500);
+            }
+    
             if (!$alert)
             {
-                return $this->genericResponse(null,"La OTB no existe",500);
+                return $this->genericResponse(null,"La alerta no existe",500);
             }
     
             return $this->genericResponse($alert,"",200);
@@ -43,7 +47,7 @@ class RestAlerts extends ResourceController
             return $this->genericResponse(null,"Token Invalido",401);
         }
     }
-
+    
     public function alertsByUser($id = null,$idus=null)
     {
         $token = ($this->request->header('Authorization')!=null)?$this->request->header('Authorization')->getValue():"";
@@ -53,18 +57,15 @@ class RestAlerts extends ResourceController
             {
                 return $this->genericResponse(null,"El ID no fue encontrado",500);
             }
-            if($this->validate('alertsInsert')){
-                $alert=$this->model->where('Otb_ID', $id);
-                $alert = $alert->where('State', 1)->findAll();
-                $alert=$alert->where('User_ID',$idus).findAll();
-                if (!$alert)
-                {
-                    return $this->genericResponse(null,"No se encontraron alertas",500);
-                }
-                return $this->genericResponse($alert,null,200);
+    
+            $alert=$this->model->where('Otb_ID', $id);
+            $alert = $alert->where('State', 1)->findAll();
+            $alert=$alert->where('User_ID',$idus).findAll();
+            if (!$alert)
+            {
+                return $this->genericResponse(null,"No se encontraron alertas",500);
             }
-            $validation= \Config\Services::validation();
-            return $this->genericResponse(null,$validation->getErrors(),500);
+            return $this->genericResponse($alert,null,200);
         }else{
             return $this->genericResponse(null,"Token Invalido",401);
         }
