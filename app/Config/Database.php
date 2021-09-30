@@ -34,7 +34,7 @@ class Database extends Config
 		'DSN'      => '',
 		'hostname' => 'localhost',
 		'username' => 'root',
-		'password' => '',
+		'password' => 'root',
 		'database' => 'otb_segura_db',
 		'DBDriver' => 'MySQLi',
 		'DBPrefix' => '',
