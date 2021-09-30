@@ -47,7 +47,7 @@ class RestAlerts extends ResourceController
             return $this->genericResponse(null,"Token Invalido",401);
         }
     }
-    
+
     public function alertsByUser($id = null,$idus=null)
     {
         $token = ($this->request->header('Authorization')!=null)?$this->request->header('Authorization')->getValue():"";
@@ -57,10 +57,8 @@ class RestAlerts extends ResourceController
             {
                 return $this->genericResponse(null,"El ID no fue encontrado",500);
             }
-    
-            $alert=$this->model->where('Otb_ID', $id);
-            $alert = $alert->where('State', 1)->findAll();
-            $alert=$alert->where('User_ID',$idus).findAll();
+            $alert = $this->model->where(['Otb_ID'=>$id,'State'=> 1,'User_ID'=>$idus])->findAll();
+            print_r($alert);
             if (!$alert)
             {
                 return $this->genericResponse(null,"No se encontraron alertas",500);
