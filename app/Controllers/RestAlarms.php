@@ -28,7 +28,7 @@ class RestAlarms extends ResourceController
                 return $this->genericResponse(null,"El ID no fue encontrado",500);
             }
     
-            $alarm=$this->model->where('Alarm_ID', $id)->findAll();
+            $alarm=$this->model->where('Otb_ID', $id)->findAll();
     
             if($alarm && $alarm[0]['State'] == 0){
                 return $this->genericResponse(null,"La alarma esta inhabilitado", 500);
