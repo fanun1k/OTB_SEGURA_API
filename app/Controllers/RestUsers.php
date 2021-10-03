@@ -226,12 +226,16 @@ class RestUsers extends ResourceController
             if($Jsondata){
                 $user_ID=$Jsondata['User_ID'];
             }  
-    
+            
             $user=$this->model->find($user_ID);
             if ($user) {
+                $tokenModel = new TokensModel();
                 $this->model->update($user["User_ID"],[
                     "Otb_ID"=>null,
                     "Type"=> 0
+                ]);
+                $tokenModel->update($user["User_ID"],[
+                    "Jwt"=> null
                 ]);
                 return $this-> genericResponse(null,'El usuario fue removido de la OTB',200);
             }
@@ -407,4 +411,33 @@ class RestUsers extends ResourceController
         return $this->genericResponse(null,$validation->getErrors(),500);
         
     }
+
+    public function downloadFile($id){
+        //$id = $this->request->getPost('User_ID');
+        if($id == null){
+            return $this->genericResponse(null, 'El id no fue encontrado',500);
+        }
+        
+        // obtener archivo
+        $root = "./uploads/";
+        $file = basename($id . ".png");
+        $path = $root.$file;
+
+        if (is_file($path)) {
+        $size = filesize($path);
+        $info = finfo_open(FILEINFO_MIME);
+        finfo_close($info);
+        
+        header("Content-Type: application/octet-stream");
+        header("Content-Disposition: attachment; filename=\"$file\"");
+        header("Content-Transfer-Encoding: binary");
+        header("Content-Length: " . $size);
+        // descargar achivo
+        readfile($path);
+        } else {
+        die("File not exist !!");
+        }
+        return $this->genericResponse(null, 'Descargando',200);
+    }
+
 }
