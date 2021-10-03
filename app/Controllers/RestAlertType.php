@@ -125,7 +125,7 @@ class RestAlertType extends ResourceController
                     'State'=>0 
                 ]);
             }
-            return $this-> genericResponse('El tipo de alerta fue eliminada',null,200);
+            return $this-> genericResponse(null,'El tipo de alerta fue eliminada',200);
         }else{
             return $this->genericResponse(null,"Token Invalido",401);
         }

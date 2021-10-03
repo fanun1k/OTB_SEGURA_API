@@ -35,7 +35,7 @@ $routes->setAutoRoute(true);
 $routes->get('/', 'Home::index');
 
 $routes->resource('restAlertType',['controller'=>'RestAlertType']);
-$routes->get('restAlerts/alertsbyuser/(:num)/(:num)','RestAlerts::alertsByUser/$1/$2');
+$routes->get('restAlert/alertsbyuser/(:num)/(:num)','RestAlerts::alertsByUser/$1/$2');
 $routes->resource('restAlert',['controller'=>'RestAlerts']);
 $routes->resource('restAlarm',['controller'=>'RestAlarms']);
 $routes->resource('restCamera',['controller' => 'RestCameras']);
