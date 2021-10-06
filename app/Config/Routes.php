@@ -50,6 +50,7 @@ $routes->POST('restOtb/joinOtb','RestOtbs::joinOtb');
 $routes->resource('restOtb',['placeholder' => '(:num)','controller'=>'RestOtbs']);
 $routes->post('restUser/upload', 'RestUsers::uploadfile');
 $routes->get('restUser/download/(:num)', 'RestUsers::downloadFile/$1');
+$routes->post('restUser/bytesToImage', 'RestUsers::GetBytesToImage');
 /*
  * --------------------------------------------------------------------
  * Additional Routing

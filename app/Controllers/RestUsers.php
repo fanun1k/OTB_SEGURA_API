@@ -440,4 +440,35 @@ class RestUsers extends ResourceController
         return $this->genericResponse(null, 'Descargando',200);
     }
 
+    public function GetBytesToImage(){
+        $id = $this->request->getPost('User_ID');
+        $contents = array();
+        
+        $filename = "./uploads/".$id.".png"; 
+        $file = fopen($filename, "rb"); 
+        array_push($contents, fread($file, filesize($filename)));
+        fclose($file);
+        
+        /*
+        $data = file_get_contents("./uploads/".$id.".png"); 
+        $data = base64_encode($data);
+        */
+
+        /*$array = array(); 
+        foreach(str_split($data) as $char){ 
+            array_push($array, ord($char)); 
+        }*/ 
+
+        /*
+        $file = fopen("./uploads/".$id.".png","r");
+
+        while (! feof ($file))
+        echo fgetc($file);
+
+        fclose($file);
+        */
+        
+        return $this->genericResponse(null, null, 200);
+    }
+
 }
