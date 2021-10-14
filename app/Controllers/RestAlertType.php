@@ -32,13 +32,9 @@ class RestAlertType extends ResourceController
             $alertType=$this->model->where('Otb_ID', $id);
             $alertType = $alertType->where('State', 1)->findAll();
     
-            if($alertType && $alertType[0]['State'] == 0){
-                return $this->genericResponse(null,"El tipo de alerta esta inhabilitado", 500);
-            }
-    
             if (!$alertType) 
             {
-                return $this->genericResponse(null,"La alerta no existe",500); 
+                return $this->genericResponse(null,"La OTB no existe",500); 
             }
     
             return $this->genericResponse($alertType,"",200); 
@@ -129,7 +125,7 @@ class RestAlertType extends ResourceController
                     'State'=>0 
                 ]);
             }
-            return $this-> genericResponse('El tipo de alerta fue eliminada',null,200);
+            return $this-> genericResponse(null,'El tipo de alerta fue eliminada',200);
         }else{
             return $this->genericResponse(null,"Token Invalido",401);
         }

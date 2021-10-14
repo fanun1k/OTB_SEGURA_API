@@ -6,7 +6,7 @@ class AlertsModel extends Model
 {
     protected $table='alert';
     protected $primaryKey= 'Alert_ID';
-    protected $allowedFields= ['Date','Longitude','Latitude','State', 'Otb_ID', 'Alert_type_ID', 'User_ID'];
+    protected $allowedFields= ['Date','Longitude','Latitude','State', 'Otb_ID', 'Alert_type_ID', 'User_ID','Message'];
 
     public function get($id = null)
     {

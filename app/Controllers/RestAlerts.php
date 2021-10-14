@@ -48,6 +48,27 @@ class RestAlerts extends ResourceController
         }
     }
 
+    public function alertsByUser($id = null,$idus=null)
+    {
+        $token = ($this->request->header('Authorization')!=null)?$this->request->header('Authorization')->getValue():"";
+
+        if($this->validateToken($token)){
+            if ($id == null && $idus==null)
+            {
+                return $this->genericResponse(null,"El ID no fue encontrado",500);
+            }
+            $alert = $this->model->where(['Otb_ID'=>$id,'State'=> 1,'User_ID'=>$idus])->findAll();
+            if (!$alert)
+            {
+                return $this->genericResponse(null,"No se encontraron alertas",500);
+            }
+            return $this->genericResponse($alert,null,200);
+        }else{
+            return $this->genericResponse(null,"Token Invalido",401);
+        }
+    }
+
+
     public function create(){
         $token = ($this->request->header('Authorization')!=null)?$this->request->header('Authorization')->getValue():"";
         if($this->validateToken($token)){
@@ -59,7 +80,8 @@ class RestAlerts extends ResourceController
                             'Latitude'=> $this->request->getPost('Latitude'),
                             'Otb_ID' => $this->request->getPost('Otb_ID'),
                             'Alert_type_ID'=>$this->request->getPost('Alert_type_ID'),
-                            'User_ID'=>$this->request->getPost('User_ID'));
+                            'User_ID'=>$this->request->getPost('User_ID'),
+                            'Message'=>$this->request->getPost('Message'));
     
             if(!array_filter($data)){
                 $data = $this->request->getJSON(true);
@@ -86,7 +108,8 @@ class RestAlerts extends ResourceController
                     'Latitude'=>$data['Latitude'],
                     'Otb_ID' => $data['Otb_ID'],
                     'Alert_type_ID'=>$data['Alert_type_ID'],
-                    'User_ID'=>$data['User_ID']
+                    'User_ID'=>$data['User_ID'],
+                    'Message'=>$data['Message']
                 ]);
                 return $this-> genericResponse(null,"Alerta Creada",200);
             }

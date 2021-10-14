@@ -134,11 +134,11 @@ class RestUsers extends ResourceController
 
                 $userModel = $this->model->update($id,[
                     'Name'=>$data['Name'],
-                    'Password'=>$data['Password'],
+                    'Password'=>md5($data['Password']),
                     'Cell_phone'=>$data['Cell_phone']
                 ]);
                 
-                return $this-> genericResponse(null,"Usuario modificado",200);
+                return $this-> genericResponse(array(["Name"=>$data["Name"],"Cell_phone"=>$data["Cell_phone"]]),"Usuario modificado",200);
             }
         
             $validation= \Config\Services::validation();
@@ -186,7 +186,7 @@ class RestUsers extends ResourceController
             if ($user) {
                 $this->model->update($user["User_ID"],[
                                         "Type"=>1]);
-                return $this->genericResponse(null,'Usuario establecido con éxito',200);                   
+                return $this->genericResponse(null,'Usuario establecido con éxito',200);
             }
             return $this->genericResponse(null,'No se encontró al usuario',500);
         }else{
@@ -226,12 +226,16 @@ class RestUsers extends ResourceController
             if($Jsondata){
                 $user_ID=$Jsondata['User_ID'];
             }  
-    
+            
             $user=$this->model->find($user_ID);
             if ($user) {
+                $tokenModel = new TokensModel();
                 $this->model->update($user["User_ID"],[
                     "Otb_ID"=>null,
                     "Type"=> 0
+                ]);
+                $tokenModel->update($user["User_ID"],[
+                    "Jwt"=> null
                 ]);
                 return $this-> genericResponse(null,'El usuario fue removido de la OTB',200);
             }
@@ -320,26 +324,57 @@ class RestUsers extends ResourceController
                         $id=$this->model->update($Userdata["User_ID"],["Password"=>md5($newPass)]);
                         if($id)  {
                             $mail = new PHPMailer(true);                              // Passing `true` enables exceptions
+
+                                // Replace sender@example.com with your "From" address.
+                                // This address must be verified with Amazon SES.
+                                $sender = 'emergencyproject2@gmail.com';
+                                $senderName = 'OTB SEGURA';
+
+                                // Replace smtp_username with your Amazon SES SMTP user name.
+                                $usernameSmtp = 'AKIAQPXAFAEEYSPOYW43';
+
+                                // Replace smtp_password with your Amazon SES SMTP password.
+                                $passwordSmtp = 'BE03Uidif8Iez17KJNLe8VMCxkSsGLNHplcDh1S4H8/J';
+
+                                // Specify a configuration set. If you do not want to use a configuration
+                                // set, comment or remove the next line.
+                               
+
+                                // If you're using Amazon SES in a region other than US West (Oregon),
+                                // replace email-smtp.us-west-2.amazonaws.com with the Amazon SES SMTP
+                                // endpoint in the appropriate region.
+                                $host = 'email-smtp.us-east-2.amazonaws.com';
+                                $port = 587;
+
+                                // The subject line of the email
+                                $subject = 'OTB SEGURA';
+
+                            
+
+                                // The HTML-formatted body of the email
+                                $bodyHtml = '<h1>Restaurar contraseña</h1>
+                                    <p>"Su contraseña fue restaurada, su nueva contraseña es: '.$newPass. '"</p>';
+
+                                $mail = new PHPMailer(true);
                             try {
                                 //Server settings
-                                $mail->SMTPDebug = 2;                                 // Enable verbose debug output
-                                $mail->isSMTP();                                      // Set mailer to use SMTP
-                                $mail->Host = 'smtp.gmail.com';                       // Specify main and backup SMTP servers
-                                $mail->SMTPAuth = true;                               // Enable SMTP authentication
-                                $mail->Username = 'emergencyproject2@gmail.com';                // SMTP username
-                                $mail->Password = 'proyecto2021';                           // SMTP password
-                                $mail->SMTPSecure = 'ssl';                            // Enable SSL encryption, TLS also accepted with port 587
-                                $mail->Port = 465;                                    // TCP port to connect to
+                                $mail->isSMTP();
+                                $mail->setFrom($sender, $senderName);
+                                $mail->Username   = $usernameSmtp;
+                                $mail->Password   = $passwordSmtp;
+                                $mail->Host       = $host;
+                                $mail->Port       = $port;
+                                $mail->SMTPAuth   = true;
+                                $mail->SMTPSecure = 'tls';
+                                                        
+                                // Specify the message recipients.
+                                $mail->addAddress($email);
                             
-                                //Recipients
-                                $mail->setFrom('emergencyproject2@gmail.com', 'OTB SEGURA');
-                                $mail->addAddress($email);     // Add a recipient
-                                //Content
-                                $mail->isHTML(true);                               // Set email format to HTML
-                                $mail->Subject = 'Restaurar Contraseña';
-                                $mail->Body    = 'Su contraseña fue restaurada correctamente, su nueva contraseña es: '.$newPass;
-                            
-                                $mail->send();
+                                // Specify the content of the message.
+                                $mail->isHTML(true);
+                                $mail->Subject    = $subject;
+                                $mail->Body       = $bodyHtml;
+                                $mail->Send();
                                 return $this-> genericResponse(null,"Se le envió un correo con su nueva contraseña",200);
                             } catch (Exception $e) {
                                 return $this-> genericResponse(null,$mail->ErrorInfo,500);
@@ -376,4 +411,33 @@ class RestUsers extends ResourceController
         return $this->genericResponse(null,$validation->getErrors(),500);
         
     }
+
+    public function downloadFile($id){
+        //$id = $this->request->getPost('User_ID');
+        if($id == null){
+            return $this->genericResponse(null, 'El id no fue encontrado',500);
+        }
+        
+        // obtener archivo
+        $root = "./uploads/";
+        $file = basename($id . ".png");
+        $path = $root.$file;
+
+        if (is_file($path)) {
+        $size = filesize($path);
+        $info = finfo_open(FILEINFO_MIME);
+        finfo_close($info);
+        
+        header("Content-Type: application/octet-stream");
+        header("Content-Disposition: attachment; filename=\"$file\"");
+        header("Content-Transfer-Encoding: binary");
+        header("Content-Length: " . $size);
+        // descargar achivo
+        readfile($path);
+        } else {
+        die("File not exist !!");
+        }
+        return $this->genericResponse(null, 'Descargando',200);
+    }
+
 }

@@ -35,6 +35,7 @@ $routes->setAutoRoute(true);
 $routes->get('/', 'Home::index');
 
 $routes->resource('restAlertType',['controller'=>'RestAlertType']);
+$routes->get('restAlert/alertsbyuser/(:num)/(:num)','RestAlerts::alertsByUser/$1/$2');
 $routes->resource('restAlert',['controller'=>'RestAlerts']);
 $routes->resource('restAlarm',['controller'=>'RestAlarms']);
 $routes->resource('restCamera',['controller' => 'RestCameras']);
@@ -48,7 +49,7 @@ $routes->post('restUser/removeotb','RestUsers::RemoveOTB');
 $routes->POST('restOtb/joinOtb','RestOtbs::joinOtb');
 $routes->resource('restOtb',['placeholder' => '(:num)','controller'=>'RestOtbs']);
 $routes->post('restUser/upload', 'RestUsers::uploadfile');
-
+$routes->get('restUser/download/(:num)', 'RestUsers::downloadFile/$1');
 /*
  * --------------------------------------------------------------------
  * Additional Routing

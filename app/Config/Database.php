@@ -33,9 +33,9 @@ class Database extends Config
 	public $default = [
 		'DSN'      => '',
 		'hostname' => 'localhost',
-		'username' => 'sa',
-		'password' => 'pablodaniel56325',
-		'database' => 'OTB_SEGURA_DB',
+		'username' => 'root',
+		'password' => 'root',
+		'database' => 'otb_segura_db',
 		'DBDriver' => 'MySQLi',
 		'DBPrefix' => '',
 		'pConnect' => false,
