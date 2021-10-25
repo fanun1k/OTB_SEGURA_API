@@ -100,7 +100,7 @@ class RestUsers extends ResourceController
             if (!$id){
                 return $this-> genericResponse(null,"Error al insertar",500);
             }
-            return $this-> genericResponse(null,"Usuario creado",200);
+            return $this-> genericResponse(array($this->model->find($id)),"Usuario creado",200);
         }
 
         $validation= \Config\Services::validation();
@@ -438,6 +438,27 @@ class RestUsers extends ResourceController
         die("File not exist !!");
         }
         return $this->genericResponse(null, 'Descargando',200);
+    }
+
+    public function verifyEmailNewUser(){
+        $email = $this->request->getPost('Email');
+       
+        $Jsondata=$this->request->getJSON(true); 
+
+        if($Jsondata){
+            $email=$Jsondata['Email'];
+        }   
+        $Userdata=$this->model
+            ->where(['Email'=>$email])
+            ->first();
+
+        if($Userdata){
+            return $this-> genericResponse(null,'Usuario existente',500); 
+        }else{
+            return $this->genericResponse(null,'Nuevo usuario',200); 
+        }
+
+        return $this->genericResponse(null,"Error",500);
     }
 
 }
