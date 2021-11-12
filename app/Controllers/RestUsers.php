@@ -13,11 +13,14 @@ class RestUsers extends ResourceController
     protected $format    = 'json';
     
     
-    public function index()
+    public function index($limit = null, $offset = null)
     {
         $token = ($this->request->header('Authorization')!=null)?$this->request->header('Authorization')->getValue():"";
         if($this->validateToken($token)){
-            return $this->genericResponse($this->model->where('State', 1)->findAll(),"",200);
+            if ($limit == null || $offset == null){
+                return $this->genericResponse(null,"Los parametros de limit y offset deben ser declarados",500);
+            }
+            return $this->genericResponse($this->model->where('State', 1)->findAll($limit,$offset),"",200);
         }else{
             return $this->genericResponse(null,"Token Invalido",401);
         }
@@ -50,7 +53,7 @@ class RestUsers extends ResourceController
         
     }
 
-    public function listusersbyotb($id){
+    public function listusersbyotb($id, $limit = null, $offset = null){
         
         $token = ($this->request->header('Authorization')!=null)?$this->request->header('Authorization')->getValue():"";
         if($this->validateToken($token)){
@@ -65,8 +68,11 @@ class RestUsers extends ResourceController
                 return $this->genericResponse(null,"la otb no existe",500);
             }
     
+            if ($limit == null || $offset == null){
+                return $this->genericResponse(null,"Los parametros de limit y offset deben ser declarados",500);
+            }
             $UsersData = $this->model->where('Otb_ID', $otb['Otb_ID']);
-            $UsersData = $UsersData->where('State', 1)->findAll();
+            $UsersData = $UsersData->where('State', 1)->orderby('Name', 'ASC')->findAll($limit,$offset);
     
             return $this->genericResponse($UsersData,"",200);
 
@@ -394,7 +400,7 @@ class RestUsers extends ResourceController
         return $this->genericResponse(null,$validation->getErrors(),500);
  
 
-    }   
+    }
 
     public function uploadfile(){
         $id = $this->request->getPost('User_ID');
@@ -438,6 +444,37 @@ class RestUsers extends ResourceController
         die("File not exist !!");
         }
         return $this->genericResponse(null, 'Descargando',200);
+    }
+
+    public function GetBytesToImage(){
+        $id = $this->request->getPost('User_ID');
+        $contents = array();
+        
+        $filename = "./uploads/".$id.".png"; 
+        $file = fopen($filename, "rb"); 
+        array_push($contents, fread($file, filesize($filename)));
+        fclose($file);
+        
+        /*
+        $data = file_get_contents("./uploads/".$id.".png"); 
+        $data = base64_encode($data);
+        */
+
+        /*$array = array(); 
+        foreach(str_split($data) as $char){ 
+            array_push($array, ord($char)); 
+        }*/ 
+
+        /*
+        $file = fopen("./uploads/".$id.".png","r");
+
+        while (! feof ($file))
+        echo fgetc($file);
+
+        fclose($file);
+        */
+        
+        return $this->genericResponse(null, null, 200);
     }
 
     public function verifyEmailNewUser(){

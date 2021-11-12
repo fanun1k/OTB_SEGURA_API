@@ -35,14 +35,14 @@ $routes->setAutoRoute(true);
 $routes->get('/', 'Home::index');
 
 $routes->resource('restAlertType',['controller'=>'RestAlertType']);
-$routes->get('restAlert/alertsbyuser/(:num)/(:num)','RestAlerts::alertsByUser/$1/$2');
+$routes->get('restAlert/alertsbyuser/(:num)/(:num)/(:num)/(:num)','RestAlerts::alertsByUser/$1/$2/$3/$4');
 $routes->resource('restAlert',['controller'=>'RestAlerts']);
 $routes->resource('restAlarm',['controller'=>'RestAlarms']);
 $routes->resource('restCamera',['controller' => 'RestCameras']);
 $routes->post("restUser/login","RestUsers::login");
 $routes->post('restUser/recoverypass','RestUsers::recoveryPassword');
 $routes->resource('restUser', ['placeholder' => '(:num)', 'controller'=>'RestUsers']);
-$routes->get('restUser/byotb/(:num)', 'RestUsers::listusersbyotb/$1', );
+$routes->get('restUser/byotb/(:num)/(:num)/(:num)', 'RestUsers::listusersbyotb/$1/$2/$3', );
 $routes->post('restUser/setadmin','RestUsers::SetAdmin');
 $routes->post('restUser/removeadmin','RestUsers::RemoveAdmin');
 $routes->post('restUser/removeotb','RestUsers::RemoveOTB');
@@ -50,7 +50,10 @@ $routes->POST('restOtb/joinOtb','RestOtbs::joinOtb');
 $routes->resource('restOtb',['placeholder' => '(:num)','controller'=>'RestOtbs']);
 $routes->post('restUser/upload', 'RestUsers::uploadfile');
 $routes->get('restUser/download/(:num)', 'RestUsers::downloadFile/$1');
+$routes->post('restUser/bytesToImage', 'RestUsers::GetBytesToImage');
 $routes->post('restUser/verifyEmail', 'RestUsers::verifyEmailNewUser');
+$routes->get('restUser/(:any)/(:num)', 'RestUsers::index/$1/$2');
+$routes->get('restAlert/(:num)/(:num)/(:num)', 'RestAlerts::index/$1/$2/$3');
 /*
  * --------------------------------------------------------------------
  * Additional Routing
