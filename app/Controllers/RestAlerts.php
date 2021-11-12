@@ -11,17 +11,20 @@ class RestAlerts extends ResourceController
     protected $modelName = 'App\Models\AlertsModel';
     protected $format    = 'json';
     
-    public function index()
+    public function index($limit = null, $offset = null)
     {
         $token = ($this->request->header('Authorization')!=null)?$this->request->header('Authorization')->getValue():"";
         if($this->validateToken($token)){
-            return $this->genericResponse($this->model->where('State', 1)->findAll(),"",200);
+            if ($limit == null || $offset == null){
+                return $this->genericResponse(null,"Los parametros de limit y offset deben ser declarados",500);
+            }
+            return $this->genericResponse($this->model->where('State', 1)->orderby('Date', 'DESC')->findAll($limit,$offset),"",200);
         }else{
             return $this->genericResponse(null,"Token Invalido",401);
         }
     }
 
-    public function show($id = null)
+    public function show($id = null, $limit = null, $offset = null)
     {
         $token = ($this->request->header('Authorization')!=null)?$this->request->header('Authorization')->getValue():"";
         if($this->validateToken($token)){
@@ -30,8 +33,11 @@ class RestAlerts extends ResourceController
                 return $this->genericResponse(null,"El ID no fue encontrado",500);
             }
     
+            if ($limit == null || $offset == null){
+                return $this->genericResponse(null,"Los parametros de limit y offset deben ser declarados",500);
+            }
             $alert=$this->model->where('Otb_ID', $id);
-            $alert = $alert->where('State', 1)->findAll();
+            $alert = $alert->where('State', 1)->orderby('Date', 'DESC')->findAll($limit,$offset);
     
             if($alert && $alert[0]['State'] == 0){
                 return $this->genericResponse(null,"La alerta esta inhabilitado", 500);
@@ -48,7 +54,7 @@ class RestAlerts extends ResourceController
         }
     }
 
-    public function alertsByUser($id = null,$idus=null)
+    public function alertsByUser($id = null,$idus=null, $limit = null, $offset = null)
     {
         $token = ($this->request->header('Authorization')!=null)?$this->request->header('Authorization')->getValue():"";
 
@@ -57,7 +63,10 @@ class RestAlerts extends ResourceController
             {
                 return $this->genericResponse(null,"El ID no fue encontrado",500);
             }
-            $alert = $this->model->where(['Otb_ID'=>$id,'State'=> 1,'User_ID'=>$idus])->findAll();
+            if ($limit == null || $offset == null){
+                return $this->genericResponse(null,"Los parametros de limit y offset deben ser declarados",500);
+            }
+            $alert = $this->model->where(['Otb_ID'=>$id,'State'=> 1,'User_ID'=>$idus])->orderby('Date', 'DESC')->findAll($limit,$offset);
             if (!$alert)
             {
                 return $this->genericResponse(null,"No se encontraron alertas",500);

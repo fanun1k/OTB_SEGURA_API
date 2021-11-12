@@ -13,11 +13,14 @@ class RestUsers extends ResourceController
     protected $format    = 'json';
     
     
-    public function index()
+    public function index($limit = null, $offset = null)
     {
         $token = ($this->request->header('Authorization')!=null)?$this->request->header('Authorization')->getValue():"";
         if($this->validateToken($token)){
-            return $this->genericResponse($this->model->where('State', 1)->findAll(),"",200);
+            if ($limit == null || $offset == null){
+                return $this->genericResponse(null,"Los parametros de limit y offset deben ser declarados",500);
+            }
+            return $this->genericResponse($this->model->where('State', 1)->findAll($limit,$offset),"",200);
         }else{
             return $this->genericResponse(null,"Token Invalido",401);
         }
@@ -50,7 +53,7 @@ class RestUsers extends ResourceController
         
     }
 
-    public function listusersbyotb($id){
+    public function listusersbyotb($id, $limit = null, $offset = null){
         
         $token = ($this->request->header('Authorization')!=null)?$this->request->header('Authorization')->getValue():"";
         if($this->validateToken($token)){
@@ -65,8 +68,11 @@ class RestUsers extends ResourceController
                 return $this->genericResponse(null,"la otb no existe",500);
             }
     
+            if ($limit == null || $offset == null){
+                return $this->genericResponse(null,"Los parametros de limit y offset deben ser declarados",500);
+            }
             $UsersData = $this->model->where('Otb_ID', $otb['Otb_ID']);
-            $UsersData = $UsersData->where('State', 1)->findAll();
+            $UsersData = $UsersData->where('State', 1)->orderby('Name', 'ASC')->findAll($limit,$offset);
     
             return $this->genericResponse($UsersData,"",200);
 
@@ -100,7 +106,7 @@ class RestUsers extends ResourceController
             if (!$id){
                 return $this-> genericResponse(null,"Error al insertar",500);
             }
-            return $this-> genericResponse(null,"Usuario creado",200);
+            return $this-> genericResponse(array($this->model->find($id)),"Usuario creado",200);
         }
 
         $validation= \Config\Services::validation();
@@ -394,7 +400,7 @@ class RestUsers extends ResourceController
         return $this->genericResponse(null,$validation->getErrors(),500);
  
 
-    }   
+    }
 
     public function uploadfile(){
         $id = $this->request->getPost('User_ID');
@@ -469,6 +475,27 @@ class RestUsers extends ResourceController
         */
         
         return $this->genericResponse(null, null, 200);
+    }
+
+    public function verifyEmailNewUser(){
+        $email = $this->request->getPost('Email');
+       
+        $Jsondata=$this->request->getJSON(true); 
+
+        if($Jsondata){
+            $email=$Jsondata['Email'];
+        }   
+        $Userdata=$this->model
+            ->where(['Email'=>$email])
+            ->first();
+
+        if($Userdata){
+            return $this-> genericResponse(null,'Usuario existente',500); 
+        }else{
+            return $this->genericResponse(null,'Nuevo usuario',200); 
+        }
+
+        return $this->genericResponse(null,"Error",500);
     }
 
 }
